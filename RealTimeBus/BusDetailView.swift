@@ -18,7 +18,7 @@ class ViewModel: ObservableObject {
     }
 
     func fetchBusTime() {
-        AF.request("http://127.0.0.1:8083/timeBus/bus857").responseData { response in
+        AF.request("http://101.43.145.108:8083/timeBus/bus857").responseData { response in
             switch response.result {
             case .success(let data):
                 do {
@@ -54,8 +54,6 @@ struct BusDetailView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text(busDetail.description)
                     .bold()
-                Text(busDetail.operationTime ?? "")
-                    .font(.subheadline)
                 HStack {
                                Button(action: viewModel.fetchBusTime) {
                                    Text(viewModel.busTimeInfo)
@@ -87,22 +85,22 @@ struct BusDetailView: View {
             }
 
             // 站点列表
-            List(busDetail.stations ?? [Station]()) { station in
-                HStack {
-                    if station.isCurrent {
-                        Image(systemName: "circle.fill")
-                            .foregroundColor(.blue)
-                        Text(station.stationName)
-                            .foregroundColor(.blue)
-                    } else {
-                        Text(station.stationName)
-                    }
-                }
-            }
+//            List(busDetail.stations) { station in
+//                HStack {
+//                    if station.isCurrent {
+//                        Image(systemName: "circle.fill")
+//                            .foregroundColor(.blue)
+//                        Text(station.stopName)
+//                            .foregroundColor(.blue)
+//                    } else {
+//                        Text(station.stationName)
+//                    }
+//                }
+//            }
 
             Spacer()
         }
-        .navigationTitle("线路 \(busDetail.line)")
+        .navigationTitle("线路 \(busDetail.lineName)")
         .navigationBarTitleDisplayMode(.inline)
     }
     
@@ -125,16 +123,24 @@ struct BusDetailView_Previews: PreviewProvider {
         BusDetailView(busDetail:
                         BusDetail(
             id: 201,
-            line: "201",
-            operationTime: "5:30-17:30 未 9:00-22:00",
-            currentStation: "中山门",
-            description:"",
+            lineName: "201",
+            serviceTime: "5:30-17:30 未 9:00-22:00",
+            firstStation:"",
+            lastStation: "",
+            description: "", currentStation: "",
             stations: [
-                Station(id: 1, stationName: "起始站", isCurrent: false),
-                // ... 更多站点
-                Station(id: 15, stationName: "中山门", isCurrent: true),
-                // ... 更多站点
-                Station(id: 20, stationName: "终点站", isCurrent: false)
+//                Station(id: 1, stopName: "站1"),
+//                Station(id: 2, stopName: "站2"),
+//                Station(id: 3, stopName: "站3"),
+//                Station(id: 4, stopName: "站4"),
+//                Station(id: 5, stopName: "站5"),
+//                Station(id: 6, stopName: "站6"),
+//                Station(id: 7, stopName: "站7"),
+//                Station(id: 8, stopName: "站8"),
+//                // ... 更多站点
+//                Station(id: 15, stopName: "中山门"),
+//                // ... 更多站点
+//                Station(id: 20, stopName: "终点站"),
             ]
             )
         )

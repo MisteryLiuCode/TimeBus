@@ -1,12 +1,29 @@
-[
-    {
-        "id": 1,
-        "line": "857",
-        "description": "至圣地-暮云保险村门口"
-    },
-    {
-        "id": 2,
-        "line": "857",
-        "description": "暮云保险村门-至圣地"
-    }
+[{
+    "id":7670584345180,
+    "lineName":"专201",
+    "serviceTime":"5:30-9:00、17:30-22:00",
+    "firstStation":"马南里",
+    "lastStation":"孙河公交场站",
+    "description":"专201(马南里-孙河公交场站)",
+    "stations":[{
+        "id":900000183523012,
+        "stopNumber":"16",
+        "stopName":"地铁孙河站",
+        "lineId":"007670584345180"
+    }]
+},
+{
+    "id":58250561,
+    "lineName":"857",
+    "serviceTime":"5:00-21:00",
+    "firstStation":"沙子营公交场站",
+    "lastStation":"蟹岛度假村东门",
+    "description":"857(沙子营公交场站-蟹岛度假村东门)",
+    "stations":[{
+        "id":110100013290008,
+        "stopNumber":"14",
+        "stopName":"地铁孙河站",
+        "lineId":"000000058250561"
+    }]
+}
 ]

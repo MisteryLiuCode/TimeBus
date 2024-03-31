@@ -19,9 +19,9 @@ struct ContentView: View {
                         HStack {
                             Image(systemName: "bus")
                             VStack(alignment: .leading) {
-                                Text(busLine.line)
+                                Text(busLine.lineName)
                                     .fontWeight(.bold)
-                                Text(busLine.description)
+                                Text(busLine.description ?? "")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                             }
@@ -47,21 +47,24 @@ struct ContentView: View {
                     let favoriteBusIds = UserDefaultsManager.shared.getFavorites()
                     return busLines.filter { favoriteBusIds.contains($0.id) }
         } else {
-            return busLines.filter { $0.line.contains(searchText) || $0.description.contains(searchText) }
+            return busLines.filter { $0.lineName.contains(searchText) || $0.description.contains(searchText) }
         }
     }
         // 加载本地JSON数据
-        func loadBusLines() {
-            guard let url = Bundle.main.url(forResource: "bus_lines", withExtension: "json"),
-                  let data = try? Data(contentsOf: url) else {
-                print("JSON file not found")
-                return
-            }
-            let decoder = JSONDecoder()
-            if let busLines = try? decoder.decode([BusDetail].self, from: data) {
-                self.busLines = busLines
-            }
+    func loadBusLines() {
+        guard let url = Bundle.main.url(forResource: "bus_lines", withExtension: "json"),
+              let data = try? Data(contentsOf: url) else {
+            print("JSON file not found")
+            return
         }
+        let decoder = JSONDecoder()
+        do {
+            let busLines = try decoder.decode([BusDetail].self, from: data)
+            self.busLines = busLines
+        } catch {
+            print("Error decoding JSON: \(error)")
+        }
+    }
 }
 
 struct ContentView_Previews: PreviewProvider {
