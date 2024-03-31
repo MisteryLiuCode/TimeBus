@@ -43,7 +43,9 @@ struct ContentView: View {
     var filteredBusLines: [BusDetail] {
         // 如果searchText为空，则显示所有busLines，否则根据搜索条件过滤
         if searchText.isEmpty {
-            return [BusDetail]()
+            // 显示所有关注过的公交线路
+                    let favoriteBusIds = UserDefaultsManager.shared.getFavorites()
+                    return busLines.filter { favoriteBusIds.contains($0.id) }
         } else {
             return busLines.filter { $0.line.contains(searchText) || $0.description.contains(searchText) }
         }

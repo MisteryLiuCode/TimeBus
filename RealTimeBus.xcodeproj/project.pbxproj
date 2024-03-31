@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4AD12A6A8B862BF81BCA5CB5 /* Pods_RealTimeBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB49F8225D2F7674B89BA1BF /* Pods_RealTimeBus.framework */; };
 		4C8031132BB9062C009ECCA9 /* RealTimeBusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031122BB9062C009ECCA9 /* RealTimeBusApp.swift */; };
 		4C8031152BB9062C009ECCA9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031142BB9062C009ECCA9 /* ContentView.swift */; };
 		4C8031172BB9062C009ECCA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C8031162BB9062C009ECCA9 /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 		4C8031212BB9091D009ECCA9 /* bus_lines.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C8031202BB9091D009ECCA9 /* bus_lines.json */; };
 		4C8031232BB91A96009ECCA9 /* BusDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031222BB91A96009ECCA9 /* BusDetailView.swift */; };
 		4C8031252BB91C3B009ECCA9 /* BusDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031242BB91C3B009ECCA9 /* BusDetail.swift */; };
+		4C8031272BB95899009ECCA9 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031262BB95899009ECCA9 /* UserDefaultsManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +27,10 @@
 		4C8031202BB9091D009ECCA9 /* bus_lines.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bus_lines.json; sourceTree = "<group>"; };
 		4C8031222BB91A96009ECCA9 /* BusDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusDetailView.swift; sourceTree = "<group>"; };
 		4C8031242BB91C3B009ECCA9 /* BusDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusDetail.swift; sourceTree = "<group>"; };
+		4C8031262BB95899009ECCA9 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		BC702CDD0280C5011EEAC74E /* Pods-RealTimeBus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeBus.debug.xcconfig"; path = "Target Support Files/Pods-RealTimeBus/Pods-RealTimeBus.debug.xcconfig"; sourceTree = "<group>"; };
+		D108FBE875F7CDE9037E8161 /* Pods-RealTimeBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeBus.release.xcconfig"; path = "Target Support Files/Pods-RealTimeBus/Pods-RealTimeBus.release.xcconfig"; sourceTree = "<group>"; };
+		FB49F8225D2F7674B89BA1BF /* Pods_RealTimeBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,17 +38,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AD12A6A8B862BF81BCA5CB5 /* Pods_RealTimeBus.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		490E06DAA5E582246EE27AA9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FB49F8225D2F7674B89BA1BF /* Pods_RealTimeBus.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		4C8031062BB9062C009ECCA9 = {
 			isa = PBXGroup;
 			children = (
 				4C8031112BB9062C009ECCA9 /* RealTimeBus */,
 				4C8031102BB9062C009ECCA9 /* Products */,
+				EA482E6A9BE707F2F25034ED /* Pods */,
+				490E06DAA5E582246EE27AA9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,6 +81,7 @@
 				4C8031182BB9062C009ECCA9 /* Preview Content */,
 				4C8031222BB91A96009ECCA9 /* BusDetailView.swift */,
 				4C8031242BB91C3B009ECCA9 /* BusDetail.swift */,
+				4C8031262BB95899009ECCA9 /* UserDefaultsManager.swift */,
 			);
 			path = RealTimeBus;
 			sourceTree = "<group>";
@@ -76,6 +94,15 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		EA482E6A9BE707F2F25034ED /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				BC702CDD0280C5011EEAC74E /* Pods-RealTimeBus.debug.xcconfig */,
+				D108FBE875F7CDE9037E8161 /* Pods-RealTimeBus.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -83,9 +110,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4C80311D2BB9062C009ECCA9 /* Build configuration list for PBXNativeTarget "RealTimeBus" */;
 			buildPhases = (
+				179C5309589C372108916ADC /* [CP] Check Pods Manifest.lock */,
 				4C80310B2BB9062C009ECCA9 /* Sources */,
 				4C80310C2BB9062C009ECCA9 /* Frameworks */,
 				4C80310D2BB9062C009ECCA9 /* Resources */,
+				4CE3DB5EE989638F620BCCBC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -142,12 +171,55 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		179C5309589C372108916ADC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RealTimeBus-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4CE3DB5EE989638F620BCCBC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RealTimeBus/Pods-RealTimeBus-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RealTimeBus/Pods-RealTimeBus-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RealTimeBus/Pods-RealTimeBus-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4C80310B2BB9062C009ECCA9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				4C8031152BB9062C009ECCA9 /* ContentView.swift in Sources */,
+				4C8031272BB95899009ECCA9 /* UserDefaultsManager.swift in Sources */,
 				4C8031132BB9062C009ECCA9 /* RealTimeBusApp.swift in Sources */,
 				4C8031232BB91A96009ECCA9 /* BusDetailView.swift in Sources */,
 				4C8031252BB91C3B009ECCA9 /* BusDetail.swift in Sources */,
@@ -273,6 +345,7 @@
 		};
 		4C80311E2BB9062C009ECCA9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BC702CDD0280C5011EEAC74E /* Pods-RealTimeBus.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -302,6 +375,7 @@
 		};
 		4C80311F2BB9062C009ECCA9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D108FBE875F7CDE9037E8161 /* Pods-RealTimeBus.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
