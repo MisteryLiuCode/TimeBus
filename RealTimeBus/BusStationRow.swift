@@ -8,35 +8,39 @@
 import SwiftUI
 
 // 单个公交站的行视图
-    struct BusStationRow: View {
-        let station: Station
+struct BusStationRow: View {
+    let station: Station
 
-        var body: some View {
-            HStack {
-                // 如果是当前站点，显示蓝色边框圆圈
-                if station.isCurrent ?? false {
-                    Circle()
-                        .strokeBorder(Color.blue, lineWidth: 2)
-                        .background(Circle().fill(Color.white))
-                        .frame(width: 24, height: 24)
-                        .overlay(
-                            Image(systemName: "bus.fill")
-                                .resizable()
-                                .scaledToFit()
-                                .padding(4)
-                        )
-                }
-                
+    var body: some View {
+        HStack(spacing: 15) {  // 增加图标和文本之间的间距
+            // 使用系统图标增强视觉效果，特别是对于当前站点
+            Image(systemName: station.isCurrent ?? false ? "bus.fill" : "bus")
+                .foregroundColor(station.isCurrent ?? false ? .blue : .gray)
+                .frame(width: 24, height: 24)
+                .background(station.isCurrent ?? false ? Color.blue.opacity(0.2) : Color.clear)
+                .cornerRadius(12)  // 当前站点图标背景的圆角
+
+            VStack(alignment: .leading) {
                 Text(station.stopName)
-                    .foregroundColor(station.isCurrent ?? false ? .blue : .primary)  //使用.primary默认文字颜色
-                    .fontWeight(station.isCurrent ?? false ? .bold : .regular)  // 当前站点加粗显示
-                
-                Spacer()
+                    .foregroundColor(station.isCurrent ?? false ? .blue : .primary)
+                    .fontWeight(station.isCurrent ?? false ? .bold : .regular)
+                    .lineLimit(1)  // 限制文本行数，避免太长影响布局
+
+                // 可以在这里添加更多的细节信息，如站点编号等
+                if station.isCurrent ?? false {
+                    Text("当前站点")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
             }
-            .padding()
-            .background(station.isCurrent ?? false ? Color.blue.opacity(0.2) : Color(.systemGray6)) // 使用不同的背景色来区分当前站点
-            .cornerRadius(10)
-            .shadow(color: .gray, radius: 2, x: 0, y: 2)  // 为每项添加阴影
-            .padding(.horizontal, 20)  // 增加左右间距
+            
+            Spacer()
         }
+        .padding()
+        .background(station.isCurrent ?? false ? Color.blue.opacity(0.1) : Color(.systemGray6))
+        .cornerRadius(10)
+        .shadow(color: .gray.opacity(0.5), radius: 2, x: 0, y: 2)
+        .padding(.horizontal)
     }
+}
+
