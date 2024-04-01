@@ -24,4 +24,5 @@ struct Station :Identifiable,Codable{
     var stopNumber: String
     var stopName: String
     var lineId: String
+    var isCurrent:Bool?
 }

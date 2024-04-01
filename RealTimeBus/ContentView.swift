@@ -12,6 +12,7 @@ struct ContentView: View {
     @State private var searchText = ""
     @State private var busLines = [BusDetail]()
     @State private var showingSeachResults = false // 新增状态来控制是否显示搜索结果
+    @StateObject private var locationManager = LocationManager() // 添加位置管理器的状态对象
     var body: some View {
             NavigationView {
                 List(filteredBusLines) { busLine in
@@ -35,7 +36,10 @@ struct ContentView: View {
                 .onChange(of: searchText) { newValue in // 当搜索文字变化时，更新显示状态
                     showingSeachResults = !newValue.isEmpty
                 }
-                .onAppear(perform: loadBusLines)
+                .onAppear{
+                    loadBusLines()
+                    locationManager.requestLocation() // 请求位置
+                }
             }
         }
     

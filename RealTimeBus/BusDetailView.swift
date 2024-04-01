@@ -11,24 +11,30 @@ import SwiftUI
 class ViewModel: ObservableObject {
     @Published var busTimeInfo: String = "加载中..."
 
+    // 响应数据
     struct ResponseData: Codable {
         let code: Int
         let data: String
         let message: String
     }
 
-    func fetchBusTime() {
-        AF.request("http://101.43.145.108:8083/timeBus/bus857").responseData { response in
+    // 请求参数
+    struct RequestParams: Codable {
+        let lineName: String
+        let stationId: Int
+        let lineId: String
+    }
+    // 调用实时公交接口
+    func fetchBusTime(lineName: String, stationId: Int, lineId: String) {
+        let params = RequestParams(lineName: lineName, stationId: stationId, lineId: lineId)
+        AF.request("http://localhost:8083/timeBus/busRealtime", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
             switch response.result {
             case .success(let data):
                 do {
-                    let decoder = JSONDecoder()
-                    let responseData = try decoder.decode(ResponseData.self, from: data)
+                    let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
                     if responseData.code == 200 {
-                        // 成功获取数据，更新 busTimeInfo
                         self.busTimeInfo = responseData.data
                     } else {
-                        // 其他状态码，根据需要处理或者更新 busTimeInfo
                         self.busTimeInfo = "获取信息失败: \(responseData.message)"
                     }
                 } catch {
@@ -44,28 +50,32 @@ class ViewModel: ObservableObject {
 }
 
 struct BusDetailView: View {
-    // 假设这些数据是通过之前页面传递过来的
     let busDetail: BusDetail
     @StateObject private var viewModel = ViewModel()
     @State private var isFavorite: Bool = false
     var body: some View {
         VStack {
-            // 顶部信息卡片
             VStack(alignment: .leading, spacing: 10) {
+                // 显示描述信息
                 Text(busDetail.description)
                     .bold()
+                // 显示服务时间
+                Text("运营时间: \(busDetail.serviceTime)")
+                    .bold()
                 HStack {
-                               Button(action: viewModel.fetchBusTime) {
-                                   Text(viewModel.busTimeInfo)
-                               }
-                               .buttonStyle(.bordered)
-                               .tint(.green)
-                               Spacer()
-                               Button(action: toggleFavorite) {
-                                   Label(isFavorite ? "取消关注" : "关注", systemImage: isFavorite ? "bell.fill" : "bell")
-                               }
-                               .buttonStyle(.bordered)
-                           }
+                    Button(action: {
+                        viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: busDetail.stations[busDetail.stations.count - 1].id, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
+                    }) {
+                        Text(viewModel.busTimeInfo)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.green)
+                    Spacer()
+                    Button(action: toggleFavorite) {
+                        Label(isFavorite ? "取消关注" : "关注", systemImage: isFavorite ? "bell.fill" : "bell")
+                    }
+                    .buttonStyle(.bordered)
+                }
             }
             .padding()
             .background(Color(.systemGray6))
@@ -73,9 +83,10 @@ struct BusDetailView: View {
             .padding(.horizontal)
             .onAppear {
                 checkIfFavorite()
-                        viewModel.fetchBusTime() // 当视图出现时获取信息
-                    }
-            // 当前位置指示
+                // 暂时先用最后一个数据
+                viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: busDetail.stations[busDetail.stations.count - 1].id, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
+            }
+            
             HStack {
                 Spacer()
                 Image(systemName: "bus")
@@ -83,67 +94,64 @@ struct BusDetailView: View {
                     .foregroundColor(.blue)
                 Spacer()
             }
-
-            // 站点列表
-//            List(busDetail.stations) { station in
-//                HStack {
-//                    if station.isCurrent {
-//                        Image(systemName: "circle.fill")
-//                            .foregroundColor(.blue)
-//                        Text(station.stopName)
-//                            .foregroundColor(.blue)
-//                    } else {
-//                        Text(station.stationName)
-//                    }
-//                }
-//            }
-
+            // 线路展示列表
+            ScrollView {
+                LazyVStack(spacing: 10) {  // 使用LazyVStack可以优化性能
+                    ForEach(busDetail.stations) { station in
+                        BusStationRow(station: station)
+                    }
+                }
+                .padding(.top, 20)  // 增加顶部间距
+            }
             Spacer()
         }
         .navigationTitle("线路 \(busDetail.lineName)")
         .navigationBarTitleDisplayMode(.inline)
     }
-    
-    private func toggleFavorite() {
-            if isFavorite {
-                UserDefaultsManager.shared.removeFavorite(busId: busDetail.id)
-            } else {
-                UserDefaultsManager.shared.saveFavorite(busId: busDetail.id)
-            }
-            isFavorite.toggle()
-        }
-        
-        private func checkIfFavorite() {
-            isFavorite = UserDefaultsManager.shared.isFavorite(busId: busDetail.id)
-        }
-}
 
+    func toggleFavorite() {
+        if isFavorite {
+            UserDefaultsManager.shared.removeFavorite(busId: busDetail.id)
+        } else {
+            UserDefaultsManager.shared.saveFavorite(busId: busDetail.id)
+        }
+        isFavorite.toggle()
+    }
+
+    func checkIfFavorite() {
+        isFavorite = UserDefaultsManager.shared.isFavorite(busId: busDetail.id)
+    }
+}
 struct BusDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        BusDetailView(busDetail:
-                        BusDetail(
+        BusDetailView(busDetail: generatePreviewBusDetail())
+    }
+
+    static func generatePreviewBusDetail() -> BusDetail {
+        let totalStops = 15
+        var stations = [Station]()
+        
+        // 创建 15 个站点的数据
+        for stopNumber in 1...totalStops {
+            let station = Station(
+                id: stopNumber,
+                stopNumber: "Stop \(stopNumber)",
+                stopName: "Station \(stopNumber)",
+                lineId: "Line \(201)",
+                isCurrent: stopNumber == 8 // 假设第 8 个站点是当前站点
+            )
+            stations.append(station)
+        }
+        
+        return BusDetail(
             id: 201,
             lineName: "201",
             serviceTime: "5:30-17:30 未 9:00-22:00",
-            firstStation:"",
-            lastStation: "",
-            description: "", currentStation: "",
-            stations: [
-//                Station(id: 1, stopName: "站1"),
-//                Station(id: 2, stopName: "站2"),
-//                Station(id: 3, stopName: "站3"),
-//                Station(id: 4, stopName: "站4"),
-//                Station(id: 5, stopName: "站5"),
-//                Station(id: 6, stopName: "站6"),
-//                Station(id: 7, stopName: "站7"),
-//                Station(id: 8, stopName: "站8"),
-//                // ... 更多站点
-//                Station(id: 15, stopName: "中山门"),
-//                // ... 更多站点
-//                Station(id: 20, stopName: "终点站"),
-            ]
-            )
+            firstStation: stations.first?.stopName ?? "",
+            lastStation: stations.last?.stopName ?? "",
+            description: "Bus route 201 details",
+            currentStation: stations.first { $0.isCurrent ?? false }?.stopName,
+            stations: stations
         )
     }
 }
-
