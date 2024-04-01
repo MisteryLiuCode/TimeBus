@@ -16,6 +16,8 @@
 		4C8031232BB91A96009ECCA9 /* BusDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031222BB91A96009ECCA9 /* BusDetailView.swift */; };
 		4C8031252BB91C3B009ECCA9 /* BusDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031242BB91C3B009ECCA9 /* BusDetail.swift */; };
 		4C8031272BB95899009ECCA9 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031262BB95899009ECCA9 /* UserDefaultsManager.swift */; };
+		4CD2906F2BBB089C00A450F8 /* BusStationRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD2906E2BBB089C00A450F8 /* BusStationRow.swift */; };
+		4CD290712BBB08BB00A450F8 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD290702BBB08BB00A450F8 /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		4C8031222BB91A96009ECCA9 /* BusDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusDetailView.swift; sourceTree = "<group>"; };
 		4C8031242BB91C3B009ECCA9 /* BusDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusDetail.swift; sourceTree = "<group>"; };
 		4C8031262BB95899009ECCA9 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		4CD2906E2BBB089C00A450F8 /* BusStationRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusStationRow.swift; sourceTree = "<group>"; };
+		4CD290702BBB08BB00A450F8 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		BC702CDD0280C5011EEAC74E /* Pods-RealTimeBus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeBus.debug.xcconfig"; path = "Target Support Files/Pods-RealTimeBus/Pods-RealTimeBus.debug.xcconfig"; sourceTree = "<group>"; };
 		D108FBE875F7CDE9037E8161 /* Pods-RealTimeBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeBus.release.xcconfig"; path = "Target Support Files/Pods-RealTimeBus/Pods-RealTimeBus.release.xcconfig"; sourceTree = "<group>"; };
 		FB49F8225D2F7674B89BA1BF /* Pods_RealTimeBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +86,8 @@
 				4C8031222BB91A96009ECCA9 /* BusDetailView.swift */,
 				4C8031242BB91C3B009ECCA9 /* BusDetail.swift */,
 				4C8031262BB95899009ECCA9 /* UserDefaultsManager.swift */,
+				4CD2906E2BBB089C00A450F8 /* BusStationRow.swift */,
+				4CD290702BBB08BB00A450F8 /* LocationManager.swift */,
 			);
 			path = RealTimeBus;
 			sourceTree = "<group>";
@@ -218,8 +224,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CD2906F2BBB089C00A450F8 /* BusStationRow.swift in Sources */,
 				4C8031152BB9062C009ECCA9 /* ContentView.swift in Sources */,
 				4C8031272BB95899009ECCA9 /* UserDefaultsManager.swift in Sources */,
+				4CD290712BBB08BB00A450F8 /* LocationManager.swift in Sources */,
 				4C8031132BB9062C009ECCA9 /* RealTimeBusApp.swift in Sources */,
 				4C8031232BB91A96009ECCA9 /* BusDetailView.swift in Sources */,
 				4C8031252BB91C3B009ECCA9 /* BusDetail.swift in Sources */,
@@ -355,6 +363,7 @@
 				DEVELOPMENT_TEAM = 7VCU9G6232;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "获取所在城市公交信息";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -386,6 +395,7 @@
 				DEVELOPMENT_TEAM = 7VCU9G6232;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "获取所在城市公交信息";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
