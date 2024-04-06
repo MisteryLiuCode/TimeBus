@@ -21,7 +21,7 @@ struct BusDetail:Identifiable,Codable{
 
 struct Station :Identifiable,Codable{
     var id: Int
-    var stopNumber: String
+    var stopNumber: Int
     var stopName: String
     var lineId: String
     var isCurrent:Bool?

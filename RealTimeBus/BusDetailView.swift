@@ -152,7 +152,7 @@ struct BusDetailView_Previews: PreviewProvider {
         for stopNumber in 1...totalStops {
             let station = Station(
                 id: stopNumber,
-                stopNumber: "Stop \(stopNumber)",
+                stopNumber: 2,
                 stopName: "Station \(stopNumber)",
                 lineId: "Line \(201)",
                 isCurrent: stopNumber == 8 // 假设第 8 个站点是当前站点

@@ -79,7 +79,7 @@ struct ContentView: View {
         
         
         
-            AF.request("http://localhost:8083/getData", method: .post).responseData {response in
+            AF.request("http://localhost:8083/getBusData", method: .post).responseData {response in
                 switch response.result {
                 case .success(let data):
                     do {
