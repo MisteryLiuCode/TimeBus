@@ -7,16 +7,19 @@
 
 import CoreLocation
 import Combine
-
+import Foundation
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let locationManager = CLLocationManager()
+    private let geocoder = CLGeocoder()
+    
     @Published var location: CLLocation?
-
+    @Published var city: String?
+    
     override init() {
         super.init()
         self.locationManager.delegate = self
     }
-
+    
     func requestLocation() {
         locationManager.requestWhenInUseAuthorization() // 请求用户授权
         locationManager.requestLocation() // 请求一次位置信息
@@ -24,10 +27,24 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     // CLLocationManagerDelegate 方法
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        location = locations.first
+        if let location = locations.first {
+            self.location = location
+            getCityName(from: location)
+        }
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
+    }
+    
+    // 从 CLLocation 获取城市名
+    private func getCityName(from location: CLLocation) {
+        geocoder.reverseGeocodeLocation(location) { (placemarks, error) in
+            if error == nil, let placemark = placemarks?.first {
+                DispatchQueue.main.async {
+                    self.city = placemark.locality // 更新城市名称
+                }
+            }
+        }
     }
 }

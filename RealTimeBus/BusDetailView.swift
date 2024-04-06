@@ -33,7 +33,9 @@ class ViewModel: ObservableObject {
                 do {
                     let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
                     if responseData.code == 200 {
-                        self.busTimeInfo = responseData.data
+                        DispatchQueue.main.async {
+                            self.busTimeInfo = responseData.data
+                        }
                     } else {
                         self.busTimeInfo = "获取信息失败: \(responseData.message)"
                     }
@@ -46,6 +48,7 @@ class ViewModel: ObservableObject {
                 self.busTimeInfo = "请求信息失败"
             }
         }
+        
     }
 }
 
@@ -53,6 +56,7 @@ struct BusDetailView: View {
     let busDetail: BusDetail
     @StateObject private var viewModel = ViewModel()
     @State private var isFavorite: Bool = false
+    @State private var selectedStationId: Int?
     var body: some View {
         VStack {
             VStack(alignment: .leading, spacing: 10) {
@@ -96,12 +100,17 @@ struct BusDetailView: View {
             }
             // 线路展示列表
             ScrollView {
-                LazyVStack(spacing: 10) {  // 使用LazyVStack可以优化性能
+                LazyVStack(spacing: 10) {
                     ForEach(busDetail.stations) { station in
-                        BusStationRow(station: station)
+                        BusStationRow(station: station,
+                                      isSelected: station.id == selectedStationId,
+                                      tapAction: {
+                                        selectedStationId = station.id  // Set the station as selected
+                                        viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: station.id, lineId: station.lineId)
+                                      })
                     }
                 }
-                .padding(.top, 20)  // 增加顶部间距
+                .padding(.top, 20)
             }
             Spacer()
         }
@@ -110,16 +119,24 @@ struct BusDetailView: View {
     }
 
     func toggleFavorite() {
-        if isFavorite {
+        
+        if isFavorite{
             UserDefaultsManager.shared.removeFavorite(busId: busDetail.id)
         } else {
-            UserDefaultsManager.shared.saveFavorite(busId: busDetail.id)
+            let stationId = selectedStationId ?? busDetail.stations[busDetail.stations.count - 1].id
+            UserDefaultsManager.shared.saveFavorite(busId: busDetail.id, stationId: stationId)
         }
         isFavorite.toggle()
     }
 
     func checkIfFavorite() {
         isFavorite = UserDefaultsManager.shared.isFavorite(busId: busDetail.id)
+        if isFavorite {
+            // Check and update the selectedStationId if the current bus is a favorite
+            if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: busDetail.id) {
+                selectedStationId = favoriteStationId
+            }
+        }
     }
 }
 struct BusDetailView_Previews: PreviewProvider {
