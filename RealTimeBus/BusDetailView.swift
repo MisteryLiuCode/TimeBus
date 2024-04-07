@@ -27,7 +27,7 @@ class ViewModel: ObservableObject {
     // 调用实时公交接口
     func fetchBusTime(lineName: String, stationId: Int, lineId: String) {
         let params = RequestParams(lineName: lineName, stationId: stationId, lineId: lineId)
-        AF.request("http://localhost:8083/timeBus/busRealtime", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
+        AF.request("http://101.43.145.108:8083/timeBus/busRealtime", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
             switch response.result {
             case .success(let data):
                 do {

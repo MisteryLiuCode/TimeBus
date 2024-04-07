@@ -13,10 +13,12 @@ struct ContentView: View {
     @State private var busLines = [BusDetail]()
     @State private var showingSeachResults = false // 新增状态来控制是否显示搜索结果
     @StateObject private var locationManager = LocationManager() // 添加位置管理器的状态对象
-    
+    @State private var isLoading = false // 新增状态来控制是否显示加载动画
+    @State private var hasLoadedDataBefore = false // 新增状态来控制是否显示加载动画
 
     var body: some View {
-            NavigationView {
+        NavigationView {
+            ZStack {
                 List(filteredBusLines) { busLine in
                     NavigationLink(destination: BusDetailView(busDetail: busLine)) {
                         HStack {
@@ -32,18 +34,24 @@ struct ContentView: View {
                     }
                 }
                 .navigationBarTitle("\(locationManager.city ?? "未知")公交", displayMode: .inline)
-                // 使用 .searchable 修饰符
-                .searchable(text: $searchText, prompt: "搜索公交线路") {
-                }
-                .onChange(of: searchText) { newValue in // 当搜索文字变化时，更新显示状态
+                .searchable(text: $searchText, prompt: "搜索公交线路")
+                .onChange(of: searchText) { newValue in
                     showingSeachResults = !newValue.isEmpty
                 }
-                .onAppear{
-                    loadBusLines()
-                    locationManager.requestLocation() // 请求位置
+
+                if isLoading {
+                    ProgressView("加载中...")
+                        .scaleEffect(1.5, anchor: .center)
+                        .progressViewStyle(CircularProgressViewStyle(tint: .blue))
                 }
             }
+            .onAppear{
+                loadBusLines()
+                locationManager.requestLocation()
+                refreshBusLines()
+            }
         }
+    }
     
     // 根据搜索文本过滤线路
     var filteredBusLines: [BusDetail] {
@@ -56,6 +64,7 @@ struct ContentView: View {
             return busLines.filter { $0.lineName.contains(searchText) || $0.description.contains(searchText) }
         }
     }
+    func refreshBusLines() {}
     
     // 响应数据
     struct ResponseData: Codable {
@@ -65,11 +74,22 @@ struct ContentView: View {
     }
         // 加载本地JSON数据
     func loadBusLines() {
+            if hasLoadedDataBefore {
+                // 已经在之前加载过数据，可能不需要再次执行加载逻辑
+                print("已经加载过数据，跳过此次加载")
+                return
+            }
+        
+        isLoading = true // 开始加载数据时显示加载动画
         do {
             // 保存到本地
             let localLineData = try GetDataManager.shared.loadFromLocalStorage()
             if !localLineData.isEmpty {
+                print("加载本地数据")
                 self.busLines = localLineData
+                isLoading = false
+                // 既然已经成功加载本地数据，接下来的代码确保不会重复执行
+                hasLoadedDataBefore = true
                 return
             }
         } catch {
@@ -79,7 +99,7 @@ struct ContentView: View {
         
         
         
-            AF.request("http://localhost:8083/getBusData", method: .post).responseData {response in
+            AF.request("http://101.43.145.108:8083/timeBus/tBusLine/getBusData", method: .post).responseData {response in
                 switch response.result {
                 case .success(let data):
                     do {
@@ -93,15 +113,17 @@ struct ContentView: View {
                                 if let busLinesData = responseData.data.data(using: .utf8) {
                                     do {
                                         let busLines = try decoder.decode([BusDetail].self, from: busLinesData)
-                                        print("加载json数据 \(busLines)")
+//                                        print("加载json数据 \(busLines)")
                                         self.busLines = busLines
-                                        
+                                        hasLoadedDataBefore = true
                                         do {
                                             // 保存到本地
                                             try GetDataManager.shared.saveToLocalStorage(data: busLines)
+                                            isLoading = false // 数据保存完成，停止显示加载动画
                                         } catch {
                                             // 如果错误被抛出，就会运行这里的代码
                                             print("保存文件失败: \(error)")
+                                            isLoading = false // 确保即使保存失败，加载动画也会停止
                                         }
                                         
                                         
