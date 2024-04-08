@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C04D7762BC43995007BF9CB /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C04D7752BC43995007BF9CB /* Common.swift */; };
 		4C8031132BB9062C009ECCA9 /* RealTimeBusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031122BB9062C009ECCA9 /* RealTimeBusApp.swift */; };
 		4C8031152BB9062C009ECCA9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031142BB9062C009ECCA9 /* ContentView.swift */; };
 		4C8031172BB9062C009ECCA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C8031162BB9062C009ECCA9 /* Assets.xcassets */; };
@@ -22,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		0736152FE92B9554B7F940F5 /* Pods_RealTimeBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C04D7752BC43995007BF9CB /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		4C80310F2BB9062C009ECCA9 /* RealTimeBus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealTimeBus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C8031122BB9062C009ECCA9 /* RealTimeBusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeBusApp.swift; sourceTree = "<group>"; };
 		4C8031142BB9062C009ECCA9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				4CD2906E2BBB089C00A450F8 /* BusStationRow.swift */,
 				4CD290702BBB08BB00A450F8 /* LocationManager.swift */,
 				7A5D14732BBD35BF00B34176 /* GetDataManager.swift */,
+				4C04D7752BC43995007BF9CB /* Common.swift */,
 			);
 			path = RealTimeBus;
 			sourceTree = "<group>";
@@ -227,6 +230,7 @@
 				4C8031152BB9062C009ECCA9 /* ContentView.swift in Sources */,
 				4C8031272BB95899009ECCA9 /* UserDefaultsManager.swift in Sources */,
 				4CD290712BBB08BB00A450F8 /* LocationManager.swift in Sources */,
+				4C04D7762BC43995007BF9CB /* Common.swift in Sources */,
 				7A5D14742BBD35BF00B34176 /* GetDataManager.swift in Sources */,
 				4C8031132BB9062C009ECCA9 /* RealTimeBusApp.swift in Sources */,
 				4C8031232BB91A96009ECCA9 /* BusDetailView.swift in Sources */,
@@ -375,7 +379,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.liu4.RealTimeBus.RealTimeBus;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liu5.RealTimeBus.RealTimeBus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -407,7 +411,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.liu4.RealTimeBus.RealTimeBus;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liu5.RealTimeBus.RealTimeBus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

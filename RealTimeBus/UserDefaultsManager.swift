@@ -14,28 +14,34 @@ struct FavoriteBusStation: Codable {
 class UserDefaultsManager {
     static let shared = UserDefaultsManager()
     private let favoriteBusStationKey = "FavoriteBusStation"
+    private let searchKey = "search"
 
     private init() {}
 
     func saveFavorite(busId: Int, stationId: Int) {
         let favorite = FavoriteBusStation(busId: busId, stationId: stationId)
-//        var favorites = getFavorites() // 获取当前所有收藏
-//        favorites.append(favorite) // 添加新的收藏
-        
+
         // 将更新后的收藏列表编码并保存
         if let encodedFavorites = try? JSONEncoder().encode(favorite) {
             UserDefaults.standard.set(encodedFavorites, forKey: "\(favoriteBusStationKey)\(busId)")
         }
     }
+    func savaSearchData(searchText: String, data: [BusDetail]) {
+        // 将搜索数据保存
+        if let encodedFavorites = try? JSONEncoder().encode(data) {
+            UserDefaults.standard.set(encodedFavorites, forKey: "\(searchKey)\(searchText)")
+        }
+    }
+    
+    func getSearchData(searchText: String) ->[BusDetail] {
+        if let searchData = UserDefaults.standard.data(forKey: "\(searchKey)\(searchText)"),
+            let busLines = try? JSONDecoder().decode([BusDetail].self, from: searchData){
+            return busLines
+        }
+        return []
+    }
+    
 
-//    func getFavorites() -> [FavoriteBusStation] {
-//        guard let savedData = UserDefaults.standard.data(forKey: favoriteBusStationKey),
-//              let savedFavorites = try? JSONDecoder().decode([FavoriteBusStation].self, from: savedData) else {
-//            return []
-//        }
-//
-//        return savedFavorites
-//    }
     func getFavorites() -> [FavoriteBusStation] {
         var allFavorites = [FavoriteBusStation]()
 
@@ -56,11 +62,7 @@ class UserDefaultsManager {
         
         return allFavorites
     }
-
     
-    
-    
-
     func getFavoriteBusIds() -> [Int] {
         return getFavorites().map { $0.busId }
     }

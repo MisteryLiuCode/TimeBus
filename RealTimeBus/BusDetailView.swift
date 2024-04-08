@@ -11,13 +11,6 @@ import SwiftUI
 class ViewModel: ObservableObject {
     @Published var busTimeInfo: String = "加载中..."
 
-    // 响应数据
-    struct ResponseData: Codable {
-        let code: Int
-        let data: String
-        let message: String
-    }
-
     // 请求参数
     struct RequestParams: Codable {
         let lineName: String
@@ -86,9 +79,7 @@ struct BusDetailView: View {
             .cornerRadius(10)
             .padding(.horizontal)
             .onAppear {
-                checkIfFavorite()
-                // 暂时先用最后一个数据
-                viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: busDetail.stations[busDetail.stations.count - 1].id, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
+                checkFavorite()
             }
             
             HStack {
@@ -118,6 +109,7 @@ struct BusDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
+    // 关注/取消站点
     func toggleFavorite() {
         
         if isFavorite{
@@ -129,46 +121,17 @@ struct BusDetailView: View {
         isFavorite.toggle()
     }
 
-    func checkIfFavorite() {
+    // 检查是否关注
+    func checkFavorite() {
         isFavorite = UserDefaultsManager.shared.isFavorite(busId: busDetail.id)
         if isFavorite {
             // Check and update the selectedStationId if the current bus is a favorite
             if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: busDetail.id) {
                 selectedStationId = favoriteStationId
             }
+        }else{
+            print("没有关注站点,默认选择最后一个")
+            viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: busDetail.stations[busDetail.stations.count - 1].id, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
         }
-    }
-}
-struct BusDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        BusDetailView(busDetail: generatePreviewBusDetail())
-    }
-
-    static func generatePreviewBusDetail() -> BusDetail {
-        let totalStops = 15
-        var stations = [Station]()
-        
-        // 创建 15 个站点的数据
-        for stopNumber in 1...totalStops {
-            let station = Station(
-                id: stopNumber,
-                stopNumber: 2,
-                stopName: "Station \(stopNumber)",
-                lineId: "Line \(201)",
-                isCurrent: stopNumber == 8 // 假设第 8 个站点是当前站点
-            )
-            stations.append(station)
-        }
-        
-        return BusDetail(
-            id: 201,
-            lineName: "201",
-            serviceTime: "5:30-17:30 未 9:00-22:00",
-            firstStation: stations.first?.stopName ?? "",
-            lastStation: stations.last?.stopName ?? "",
-            description: "Bus route 201 details",
-            currentStation: stations.first { $0.isCurrent ?? false }?.stopName,
-            stations: stations
-        )
     }
 }
