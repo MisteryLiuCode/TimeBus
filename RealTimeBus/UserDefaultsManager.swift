@@ -7,8 +7,9 @@
 
 import Foundation
 struct FavoriteBusStation: Codable {
-    let busId: Int
+    let busDetail: BusDetail
     let stationId: Int
+    let dateAdded: Date
 }
 
 class UserDefaultsManager {
@@ -18,12 +19,12 @@ class UserDefaultsManager {
 
     private init() {}
 
-    func saveFavorite(busId: Int, stationId: Int) {
-        let favorite = FavoriteBusStation(busId: busId, stationId: stationId)
+    func saveFavorite(busDetail: BusDetail, stationId: Int) {
+        let favorite = FavoriteBusStation(busDetail: busDetail, stationId: stationId,dateAdded: Date())
 
         // 将更新后的收藏列表编码并保存
         if let encodedFavorites = try? JSONEncoder().encode(favorite) {
-            UserDefaults.standard.set(encodedFavorites, forKey: "\(favoriteBusStationKey)\(busId)")
+            UserDefaults.standard.set(encodedFavorites, forKey: "\(favoriteBusStationKey)\(busDetail.id)")
         }
     }
     func savaSearchData(searchText: String, data: [BusDetail]) {
@@ -59,12 +60,12 @@ class UserDefaultsManager {
                 allFavorites.append(savedFavorites)
             }
         }
-        
+        allFavorites.sort { $0.dateAdded > $1.dateAdded }
         return allFavorites
     }
     
-    func getFavoriteBusIds() -> [Int] {
-        return getFavorites().map { $0.busId }
+    func getFavoriteBus() -> [BusDetail] {
+        return getFavorites().map { $0.busDetail }
     }
 
     // Remove favorite
@@ -78,7 +79,7 @@ class UserDefaultsManager {
         let favorites = getFavorites()
 
         // 检查是否有匹配的busId，如果有，则此公交是收藏的
-        return favorites.contains(where: { $0.busId == busId })
+        return favorites.contains(where: { $0.busDetail.id == busId })
     }
 
     // Get stored favorite stationId for a bus, if exists
@@ -87,6 +88,6 @@ class UserDefaultsManager {
         let favorites = getFavorites()
 
         // 尝试找到匹配的busId，如果找到，返回相应的stationId
-        return favorites.first(where: { $0.busId == busId })?.stationId
+        return favorites.first(where: { $0.busDetail.id == busId })?.stationId
     }
 }

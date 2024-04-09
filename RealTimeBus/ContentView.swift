@@ -41,22 +41,30 @@ struct ContentView: View {
             }
             .onAppear{
                 locationManager.requestLocation()
+                refreshFavoriteBusLines()
             }
         }
     }
-    
+
     // 根据搜索文本过滤线路
     var filteredBusLines: [BusDetail] {
         // 如果searchText为空，则显示所有busLines，否则根据搜索条件过滤
         if searchText.isEmpty {
+            print("搜索框为空,显示所有关注过的公交线路")
             // 显示所有关注过的公交线路
-                    let favoriteBusIds = UserDefaultsManager.shared.getFavoriteBusIds()
-            
-                    return busLines.filter { favoriteBusIds.contains($0.id) }
+            return UserDefaultsManager.shared.getFavoriteBus()
         } else {
+            print("显示搜索内容")
             return busLines.filter { $0.lineName.contains(searchText) || $0.description.contains(searchText) }
         }
     }
+    
+    func refreshFavoriteBusLines() {
+            // 假设`UserDefaultsManager.shared.getFavoriteBus()`
+            // 是同步返回最新的收藏公交线路数组的函数。
+            busLines = UserDefaultsManager.shared.getFavoriteBus()
+            print("最爱公交线路列表已刷新")
+        }
 
     
     func fetchBusLines(searchText: String) {

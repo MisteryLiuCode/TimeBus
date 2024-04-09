@@ -116,7 +116,7 @@ struct BusDetailView: View {
             UserDefaultsManager.shared.removeFavorite(busId: busDetail.id)
         } else {
             let stationId = selectedStationId ?? busDetail.stations[busDetail.stations.count - 1].id
-            UserDefaultsManager.shared.saveFavorite(busId: busDetail.id, stationId: stationId)
+            UserDefaultsManager.shared.saveFavorite(busDetail: busDetail, stationId: stationId)
         }
         isFavorite.toggle()
     }
