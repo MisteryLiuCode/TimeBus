@@ -35,8 +35,10 @@ struct ContentView: View {
                 .searchable(text: $searchText, prompt: "搜索公交线路")
                 .onChange(of: searchText) { newValue in
                     showingSeachResults = !newValue.isEmpty
-                    // 当searchText改变时调用API
-                    fetchBusLines(searchText: newValue)
+                    if !newValue.isEmpty{
+                        // 当searchText改变时调用API
+                        fetchBusLines(searchText: newValue)
+                    }
                 }
             }
             .onAppear{
