@@ -88,7 +88,7 @@ class BusViewModel: ObservableObject {
 
 struct BusRowView: View {
     var bus: BusDetail
-    @ObservedObject var viewModel = BusViewModel()
+    @StateObject var viewModel = BusViewModel()
     
     
     var body: some View {

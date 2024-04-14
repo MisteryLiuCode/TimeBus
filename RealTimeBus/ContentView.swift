@@ -19,17 +19,21 @@ struct ContentView: View {
             NavigationView {
                 ZStack {
                     if showingSearchResults {
-                        // 显示搜索结果的视图
                         List(filteredBusLines) { busLine in
                             searchResultsView(busLine: busLine)
                         }
                         .navigationBarTitle("\(locationManager.city ?? "未知")公交搜索结果")
+                        .refreshable {
+                            refreshData()
+                        }
                     } else {
-                        // 显示关注的视图
                         List(UserDefaultsManager.shared.getFavoriteBus()) { busLine in
                             favoriteBusView(busLine: busLine)
                         }
                         .navigationBarTitle("\(locationManager.city ?? "未知")公交")
+                        .refreshable {
+                            refreshData()
+                        }
                     }
                 }
                 .searchable(text: $searchText, prompt: "搜索公交线路")
@@ -47,6 +51,15 @@ struct ContentView: View {
                 }
             }
         }
+    
+    func refreshData() {
+        if showingSearchResults {
+            fetchBusLines(searchText: searchText)
+        } else {
+            refreshFavoriteBusLines()
+        }
+    }
+
 
 
     
