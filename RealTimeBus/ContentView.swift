@@ -11,64 +11,85 @@ import Alamofire
 struct ContentView: View {
     @State private var searchText = ""
     @State private var busLines = [BusDetail]()
-    @State private var showingSeachResults = false // 新增状态来控制是否显示搜索结果
     @StateObject private var locationManager = LocationManager() // 添加位置管理器的状态对象
+    @State private var showingSearchResults = false // 新增状态来控制是否显示搜索结果
     
     
     var body: some View {
-        TabView {
             NavigationView {
                 ZStack {
-                    List(filteredBusLines) { busLine in
-                        ZStack {
-                            // Main content view
-                            BusRowView(bus: busLine)
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Label("love", systemImage: "heart.slash")
-                                        .tint(.green)
-                                }
-                                .background(
-                                    NavigationLink(destination: BusDetailView(busDetail: busLine)) {
-                                        EmptyView()  // Empty view for the NavigationLink
-                                    }
-                                    .opacity(0) // Make NavigationLink completely transparent
-                                )
+                    if showingSearchResults {
+                        // 显示搜索结果的视图
+                        List(filteredBusLines) { busLine in
+                            searchResultsView(busLine: busLine)
                         }
-                        .listStyle(PlainListStyle())
-                    }
-                    .navigationBarTitle("\(locationManager.city ?? "未知")公交", displayMode: .inline)
-                    .searchable(text: $searchText, prompt: "搜索公交线路")
-                    .onChange(of: searchText) { newValue in
-                        if !newValue.isEmpty {
-                            fetchBusLines(searchText: newValue)
+                        .navigationBarTitle("\(locationManager.city ?? "未知")公交搜索结果")
+                    } else {
+                        // 显示关注的视图
+                        List(UserDefaultsManager.shared.getFavoriteBus()) { busLine in
+                            favoriteBusView(busLine: busLine)
                         }
+                        .navigationBarTitle("\(locationManager.city ?? "未知")公交")
                     }
-                    .onAppear {
-                        locationManager.requestLocation()
+                }
+                .searchable(text: $searchText, prompt: "搜索公交线路")
+                .onChange(of: searchText) { newValue in
+                    showingSearchResults = !newValue.isEmpty
+                    if !newValue.isEmpty {
+                        fetchBusLines(searchText: newValue)
+                    }
+                }
+                .onAppear {
+                    locationManager.requestLocation()
+                    if searchText.isEmpty {
                         refreshFavoriteBusLines()
                     }
-                    .refreshable { refreshFavoriteBusLines() }
                 }
             }
         }
-    }
+
 
     
+    func favoriteBusView(busLine: BusDetail) -> some View {
+            ZStack {
+                BusRowView(bus: busLine)
+                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                        Label("love", systemImage: "heart.slash")
+                            .tint(.green)
+                    }
+                    .background(
+                        NavigationLink(destination: BusDetailView(busDetail: busLine)) {
+                            EmptyView()  // Empty view for the NavigationLink
+                        }
+                        .opacity(0) // Make NavigationLink completely transparent
+                    )
+            }
+        }
     
+    func searchResultsView(busLine: BusDetail) -> some View {
+            NavigationLink(destination: BusDetailView(busDetail: busLine)) {
+                HStack {
+                    Image(systemName: "bus")
+                    VStack(alignment: .leading) {
+                        Text(busLine.lineName)
+                            .fontWeight(.bold)
+                        Text(busLine.description ?? "")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+        }
     
 
     // 根据搜索文本过滤线路
     var filteredBusLines: [BusDetail] {
-        // 如果searchText为空，则显示所有busLines，否则根据搜索条件过滤
-        if searchText.isEmpty {
-            print("搜索框为空,显示所有关注过的公交线路")
-            // 显示所有关注过的公交线路
-            return UserDefaultsManager.shared.getFavoriteBus()
-        } else {
-            print("显示搜索内容")
-            return busLines.filter { $0.lineName.contains(searchText) || $0.description.contains(searchText) }
+            if searchText.isEmpty {
+                return []
+            } else {
+                return busLines.filter { $0.lineName.contains(searchText) || $0.description.contains(searchText) }
+            }
         }
-    }
     
     func refreshFavoriteBusLines() {
             // 假设`UserDefaultsManager.shared.getFavoriteBus()`
