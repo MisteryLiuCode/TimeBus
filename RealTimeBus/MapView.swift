@@ -16,6 +16,7 @@ struct MapView: UIViewRepresentable {
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView()
         mapView.delegate = context.coordinator
+        mapView.isScrollEnabled = false  // 禁止地图滑动
         updateAnnotations(mapView: mapView)
         return mapView
     }
@@ -73,5 +74,6 @@ struct MapView: UIViewRepresentable {
         }
     }
 }
+
 
 

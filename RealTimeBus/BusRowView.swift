@@ -55,7 +55,7 @@ class BusViewModel: ObservableObject {
     func getTimeStaionLocation(lineName: String, stationId: Int, lineId: String) {
             print("开始获取地图公交信息")
             let params = RequestParams(lineName: lineName, stationId: stationId, lineId: lineId)
-            AF.request("http://localhost:8083/timeBus/busMap", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
+            AF.request("http://47.99.71.232:8083/timeBus/busMap", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
                 switch response.result {
                 case .success(let data):
                     do {
