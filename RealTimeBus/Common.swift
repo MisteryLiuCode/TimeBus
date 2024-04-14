@@ -14,6 +14,7 @@ struct ResponseData: Codable {
     let message: String
 }
 
-let host = "localhost"
+//let host = "localhost"
+let host = "47.99.71.232"
 
 let busDataByLineNameUrl = "http://\(host):8083/timeBus/tBusLine/getBusDataByLineName/"

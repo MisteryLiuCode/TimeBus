@@ -21,7 +21,7 @@ class ViewModel: ObservableObject {
     func fetchBusTime(lineName: String, stationId: Int, lineId: String) {
         print("开始调用实时公交接口")
         let params = RequestParams(lineName: lineName, stationId: stationId, lineId: lineId)
-        AF.request("http://101.43.145.108:8083/timeBus/busRealtime", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
+        AF.request("http://47.99.71.232:8083/timeBus/busRealtime", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
             switch response.result {
             case .success(let data):
                 do {
@@ -62,7 +62,7 @@ struct BusDetailView: View {
                     .bold()
                 HStack {
                     Button(action: {
-                        viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: busDetail.stations[busDetail.stations.count - 1].id, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
+                        
                     }) {
                         Text(viewModel.busTimeInfo)
                     }
@@ -80,6 +80,7 @@ struct BusDetailView: View {
             .cornerRadius(10)
             .padding(.horizontal)
             .onAppear {
+                viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: busDetail.stations[busDetail.stations.count - 1].id, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
                 checkFavorite()
             }
             
