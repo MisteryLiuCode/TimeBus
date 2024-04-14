@@ -13,100 +13,46 @@ struct ContentView: View {
     @State private var busLines = [BusDetail]()
     @State private var showingSeachResults = false // 新增状态来控制是否显示搜索结果
     @StateObject private var locationManager = LocationManager() // 添加位置管理器的状态对象
-
-//    var body: some View {
-//        NavigationView {
-//            ZStack {
-//                List(filteredBusLines) { busLine in
-//                    NavigationLink(destination: BusDetailView(busDetail: busLine)) {
-//                        HStack {
-//                            Image(systemName: "bus")
-//                            VStack(alignment: .leading) {
-//                                Text(busLine.lineName)
-//                                    .fontWeight(.bold)
-//                                Text(busLine.description ?? "")
-//                                    .font(.subheadline)
-//                                    .foregroundColor(.gray)
-//                            }
-//                        }
-//                    }
-//                }
-//                .navigationBarTitle("\(locationManager.city ?? "未知")公交", displayMode: .inline)
-//                .searchable(text: $searchText, prompt: "搜索公交线路")
-//                .onChange(of: searchText) { newValue in
-//                    showingSeachResults = !newValue.isEmpty
-//                    if !newValue.isEmpty{
-//                        // 当searchText改变时调用API
-//                        fetchBusLines(searchText: newValue)
-//                    }
-//                }
-//            }
-//            .onAppear{
-//                locationManager.requestLocation()
-//                refreshFavoriteBusLines()
-//            }
-//        }
-//    }
     
     
     var body: some View {
-        
         TabView {
             NavigationView {
                 ZStack {
                     List(filteredBusLines) { busLine in
-                        
-                        BusRowView(bus: busLine)
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Label("love", systemImage: "heart.slash")
-                                .tint(.green)
-                                
-                            }
-                            .listStyle(PlainListStyle())
-                            .listRowSeparator(.visible)
-                            .listRowSeparatorTint(Color.blue)
-//                            .onTapGesture {
-//                                selectedBus = bus
-//                            }
-                        
-                        
-                    }
-                        .navigationBarTitle("\(locationManager.city ?? "未知")公交", displayMode: .inline)
-                        .searchable(text: $searchText, prompt: "搜索公交线路")
-                        .onChange(of: searchText) { newValue in
-                            showingSeachResults = !newValue.isEmpty
-                            if !newValue.isEmpty{
-                                // 当searchText改变时调用API
-                                fetchBusLines(searchText: newValue)
-                            }
+                        ZStack {
+                            // Main content view
+                            BusRowView(bus: busLine)
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Label("love", systemImage: "heart.slash")
+                                        .tint(.green)
+                                }
+                                .background(
+                                    NavigationLink(destination: BusDetailView(busDetail: busLine)) {
+                                        EmptyView()  // Empty view for the NavigationLink
+                                    }
+                                    .opacity(0) // Make NavigationLink completely transparent
+                                )
                         }
-                    .onAppear{
+                        .listStyle(PlainListStyle())
+                    }
+                    .navigationBarTitle("\(locationManager.city ?? "未知")公交", displayMode: .inline)
+                    .searchable(text: $searchText, prompt: "搜索公交线路")
+                    .onChange(of: searchText) { newValue in
+                        if !newValue.isEmpty {
+                            fetchBusLines(searchText: newValue)
+                        }
+                    }
+                    .onAppear {
                         locationManager.requestLocation()
                         refreshFavoriteBusLines()
                     }
                     .refreshable { refreshFavoriteBusLines() }
-//                    .searchable(text: $search.animation(), prompt: "Filter")
-                    
-//                    if let selectedBus = selectedBus {
-//                        AsyncImage(url: URL(string: selectedBus.image)) { image in
-//                            image
-//                                .resizable()
-//                                .cornerRadius(10)
-//                        } placeholder: {
-//                            Image(systemName: "bus")
-//                        }
-//                        .frame(width: 275, height: 275)
-//                        .padding(20)
-//                        .background(.ultraThinMaterial)
-//                        .cornerRadius(25)
-//                        .onTapGesture {
-//                            self.selectedBus = nil
-//                        }
-//                    }
                 }
             }
         }
     }
+
     
     
     
