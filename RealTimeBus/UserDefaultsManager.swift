@@ -81,8 +81,8 @@ class UserDefaultsManager {
         // 检查是否有匹配的busId，如果有，则此公交是收藏的
         return favorites.contains(where: { $0.busDetail.id == busId })
     }
-
-    // Get stored favorite stationId for a bus, if exists
+    
+    // 用于获取关注的站点,不一定有关注,没关注,上层逻辑会处理
     func getFavoriteStationId(for busId: Int) -> Int? {
         // 同样使用getFavorites()方法获取所有收藏项
         let favorites = getFavorites()
@@ -90,4 +90,5 @@ class UserDefaultsManager {
         // 尝试找到匹配的busId，如果找到，返回相应的stationId
         return favorites.first(where: { $0.busDetail.id == busId })?.stationId
     }
+    
 }

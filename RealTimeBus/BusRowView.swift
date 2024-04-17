@@ -21,9 +21,10 @@ class BusViewModel: ObservableObject {
         let stationId: Int
         let lineId: String
     }
-    func fetchBusTime(lineName: String, stationId: Int, lineId: String) {
+    func fetchBusTime(bus: BusDetail) {
         print("开始获取实时公交信息")
-        let params = RequestParams(lineName: lineName, stationId: stationId, lineId: lineId)
+        if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: bus.id) {
+        let params = RequestParams(lineName: bus.lineName, stationId: favoriteStationId, lineId: converToLineId(lineId: bus.id))
         AF.request("http://47.99.71.232:8083/timeBus/busRealtime", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
             switch response.result {
             case .success(let data):
@@ -45,6 +46,7 @@ class BusViewModel: ObservableObject {
             }
         }
     }
+    }
     struct StationLocation: Decodable {
         let longitude: Double
         let latitude: Double
@@ -52,9 +54,10 @@ class BusViewModel: ObservableObject {
     }
 
     // 获取关注的staionId，最近一站的经纬度，如果没有，返回关注的站位置
-    func getTimeStaionLocation(lineName: String, stationId: Int, lineId: String) {
+    func getTimeStaionLocation(bus: BusDetail) {
+        if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: bus.id) {
             print("开始获取地图公交信息")
-            let params = RequestParams(lineName: lineName, stationId: stationId, lineId: lineId)
+            let params = RequestParams(lineName: bus.lineName, stationId: favoriteStationId, lineId: converToLineId(lineId: bus.id))
             AF.request("http://47.99.71.232:8083/timeBus/busMap", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
                 switch response.result {
                 case .success(let data):
@@ -81,6 +84,7 @@ class BusViewModel: ObservableObject {
                 }
             }
         }
+    }
 
 }
 
@@ -100,7 +104,7 @@ struct BusRowView: View {
                 .padding(.vertical, 5.0)
                 .frame(height: 150)
                 .onAppear {
-                    viewModel.getTimeStaionLocation(lineName: bus.lineName, stationId: bus.stations.last!.id, lineId: bus.stations.last!.lineId)
+                    viewModel.getTimeStaionLocation(bus: bus)
                 }
 
             HStack(alignment: .top) {
@@ -128,7 +132,7 @@ struct BusRowView: View {
                     }
                 }
                 .onAppear {
-                    viewModel.fetchBusTime(lineName: bus.lineName, stationId: bus.stations.last!.id, lineId: bus.stations.last!.lineId)
+                    viewModel.fetchBusTime(bus: bus)
                 }
 
                 Spacer()

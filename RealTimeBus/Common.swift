@@ -18,3 +18,8 @@ struct ResponseData: Codable {
 let host = "47.99.71.232"
 
 let busDataByLineNameUrl = "http://\(host):8083/timeBus/tBusLine/getBusDataByLineName/"
+
+func converToLineId(lineId: Int) -> String {
+    // 使用格式化字符串来指定输出长度和前导零
+    return String(format: "%015d", lineId)
+}

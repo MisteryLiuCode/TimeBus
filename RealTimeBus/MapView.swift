@@ -36,7 +36,7 @@ struct MapView: UIViewRepresentable {
         mapView.addAnnotation(annotation)
 
         // 设置地图的焦点和缩放级别
-        let span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        let span = MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
         let region = MKCoordinateRegion(center: annotation.coordinate, span: span)
         mapView.setRegion(region, animated: true)
     }

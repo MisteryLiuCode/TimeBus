@@ -9,28 +9,35 @@ import SwiftUI
 import Alamofire
 
 struct ContentView: View {
+    // 搜索
     @State private var searchText = ""
+    // 公交线路数组
     @State private var busLines = [BusDetail]()
+    // 访问位置,显示城市公交,比如北京
     @StateObject private var locationManager = LocationManager() // 添加位置管理器的状态对象
-    @State private var showingSearchResults = false // 新增状态来控制是否显示搜索结果
+    // 根据是否是搜索结果显示不同的样式
+    @State private var showingSearchResults = false
     
     
     var body: some View {
             NavigationView {
                 ZStack {
+                    // 搜索结果显示的数据和样式
                     if showingSearchResults {
                         List(filteredBusLines) { busLine in
                             searchResultsView(busLine: busLine)
                         }
-                        .navigationBarTitle("\(locationManager.city ?? "未知")公交搜索结果")
+                        // 获取当前位置的城市
+                        .navigationBarTitle("\(locationManager.city ?? "北京")公交搜索结果")
                         .refreshable {
                             refreshData()
                         }
                     } else {
+                        // 获取关注的公交线路
                         List(UserDefaultsManager.shared.getFavoriteBus()) { busLine in
                             favoriteBusView(busLine: busLine)
                         }
-                        .navigationBarTitle("\(locationManager.city ?? "未知")公交")
+                        .navigationBarTitle("\(locationManager.city ?? "北京")公交")
                         .refreshable {
                             refreshData()
                         }
@@ -44,8 +51,10 @@ struct ContentView: View {
                     }
                 }
                 .onAppear {
+                    // 请求位置
                     locationManager.requestLocation()
                     if searchText.isEmpty {
+                        // 刷新关注公交
                         refreshFavoriteBusLines()
                     }
                 }
