@@ -10,8 +10,8 @@ import Alamofire
 // 视图模型
 class BusViewModel: ObservableObject {
     @Published var busReatimeInfo: String = "加载中..."
-    @Published var longitude: Double = 116.397455
-    @Published var latitude: Double = 39.909187
+    @State var longitude: Double = 116.397455
+    @State var latitude: Double = 39.909187
     @Published var mapDesc: String = "加载中..."
     
     
@@ -91,21 +91,24 @@ class BusViewModel: ObservableObject {
 
 
 struct BusRowView: View {
-    var bus: BusDetail
+    @ObservedObject var bus: BusDetail
     @StateObject var viewModel = BusViewModel()
     
     
     var body: some View {
         VStack {
-            // 输入点位
+            // 显示地图
             MapView(latitude: viewModel.latitude, longitude: viewModel.longitude, description: viewModel.mapDesc)
                 .background(Color.red)
                 .clipShape(RoundedRectangle(cornerRadius: 25))
                 .padding(.vertical, 5.0)
                 .frame(height: 150)
                 .onAppear {
+                    print("获取公交实时时间,并显示在地图上")
                     viewModel.getTimeStaionLocation(bus: bus)
-                }
+                }.onReceive(viewModel.$mapDesc, perform: { _ in
+                    // 当经纬度更新时重新渲染地图
+                })
 
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 5) {

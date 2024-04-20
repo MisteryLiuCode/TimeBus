@@ -8,6 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		4C04D7762BC43995007BF9CB /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C04D7752BC43995007BF9CB /* Common.swift */; };
+		4C49DB1A2BD38EC400A13511 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C49DB192BD38EC300A13511 /* WidgetKit.framework */; };
+		4C49DB1C2BD38EC400A13511 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C49DB1B2BD38EC400A13511 /* SwiftUI.framework */; };
+		4C49DB1F2BD38EC400A13511 /* RealTimeBusWeightBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DB1E2BD38EC400A13511 /* RealTimeBusWeightBundle.swift */; };
+		4C49DB212BD38EC400A13511 /* RealTimeBusWeightAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DB202BD38EC400A13511 /* RealTimeBusWeightAttributes.swift */; };
+		4C49DB232BD38EC400A13511 /* RealTimeBusWeightLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DB222BD38EC400A13511 /* RealTimeBusWeightLiveActivity.swift */; };
+		4C49DB262BD38EC400A13511 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C49DB252BD38EC400A13511 /* Assets.xcassets */; };
+		4C49DB282BD38EC400A13511 /* RealTimeBusWeight.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DB242BD38EC400A13511 /* RealTimeBusWeight.intentdefinition */; };
+		4C49DB292BD38EC400A13511 /* RealTimeBusWeight.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DB242BD38EC400A13511 /* RealTimeBusWeight.intentdefinition */; };
+		4C49DB2C2BD38EC400A13511 /* RealTimeBusWeightExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4C49DB182BD38EC300A13511 /* RealTimeBusWeightExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4C49DB312BD38FF300A13511 /* RealTimeBusWeightAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DB202BD38EC400A13511 /* RealTimeBusWeightAttributes.swift */; };
 		4C8031132BB9062C009ECCA9 /* RealTimeBusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031122BB9062C009ECCA9 /* RealTimeBusApp.swift */; };
 		4C8031152BB9062C009ECCA9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031142BB9062C009ECCA9 /* ContentView.swift */; };
 		4C8031172BB9062C009ECCA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C8031162BB9062C009ECCA9 /* Assets.xcassets */; };
@@ -23,9 +33,42 @@
 		FFCB748197F1AE04C1D784D3 /* Pods_RealTimeBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0736152FE92B9554B7F940F5 /* Pods_RealTimeBus.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		4C49DB2A2BD38EC400A13511 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4C8031072BB9062C009ECCA9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4C49DB172BD38EC300A13511;
+			remoteInfo = RealTimeBusWeightExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		4C49DB2D2BD38EC500A13511 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				4C49DB2C2BD38EC400A13511 /* RealTimeBusWeightExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0736152FE92B9554B7F940F5 /* Pods_RealTimeBus.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RealTimeBus.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C04D7752BC43995007BF9CB /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
+		4C49DB182BD38EC300A13511 /* RealTimeBusWeightExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RealTimeBusWeightExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C49DB192BD38EC300A13511 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		4C49DB1B2BD38EC400A13511 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		4C49DB1E2BD38EC400A13511 /* RealTimeBusWeightBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeBusWeightBundle.swift; sourceTree = "<group>"; };
+		4C49DB202BD38EC400A13511 /* RealTimeBusWeightAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeBusWeightAttributes.swift; sourceTree = "<group>"; };
+		4C49DB222BD38EC400A13511 /* RealTimeBusWeightLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeBusWeightLiveActivity.swift; sourceTree = "<group>"; };
+		4C49DB242BD38EC400A13511 /* RealTimeBusWeight.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = RealTimeBusWeight.intentdefinition; sourceTree = "<group>"; };
+		4C49DB252BD38EC400A13511 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4C49DB272BD38EC400A13511 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C80310F2BB9062C009ECCA9 /* RealTimeBus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealTimeBus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C8031122BB9062C009ECCA9 /* RealTimeBusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeBusApp.swift; sourceTree = "<group>"; };
 		4C8031142BB9062C009ECCA9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -44,6 +87,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4C49DB152BD38EC300A13511 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C49DB1C2BD38EC400A13511 /* SwiftUI.framework in Frameworks */,
+				4C49DB1A2BD38EC400A13511 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4C80310C2BB9062C009ECCA9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -55,10 +107,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C49DB1D2BD38EC400A13511 /* RealTimeBusWeight */ = {
+			isa = PBXGroup;
+			children = (
+				4C49DB1E2BD38EC400A13511 /* RealTimeBusWeightBundle.swift */,
+				4C49DB202BD38EC400A13511 /* RealTimeBusWeightAttributes.swift */,
+				4C49DB222BD38EC400A13511 /* RealTimeBusWeightLiveActivity.swift */,
+				4C49DB242BD38EC400A13511 /* RealTimeBusWeight.intentdefinition */,
+				4C49DB252BD38EC400A13511 /* Assets.xcassets */,
+				4C49DB272BD38EC400A13511 /* Info.plist */,
+			);
+			path = RealTimeBusWeight;
+			sourceTree = "<group>";
+		};
 		4C8031062BB9062C009ECCA9 = {
 			isa = PBXGroup;
 			children = (
 				4C8031112BB9062C009ECCA9 /* RealTimeBus */,
+				4C49DB1D2BD38EC400A13511 /* RealTimeBusWeight */,
 				4C8031102BB9062C009ECCA9 /* Products */,
 				EA482E6A9BE707F2F25034ED /* Pods */,
 				55AF1DA583CFBFCE82DD3453 /* Frameworks */,
@@ -69,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				4C80310F2BB9062C009ECCA9 /* RealTimeBus.app */,
+				4C49DB182BD38EC300A13511 /* RealTimeBusWeightExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -105,6 +172,8 @@
 			isa = PBXGroup;
 			children = (
 				0736152FE92B9554B7F940F5 /* Pods_RealTimeBus.framework */,
+				4C49DB192BD38EC300A13511 /* WidgetKit.framework */,
+				4C49DB1B2BD38EC400A13511 /* SwiftUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -121,6 +190,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		4C49DB172BD38EC300A13511 /* RealTimeBusWeightExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C49DB302BD38EC500A13511 /* Build configuration list for PBXNativeTarget "RealTimeBusWeightExtension" */;
+			buildPhases = (
+				4C49DB142BD38EC300A13511 /* Sources */,
+				4C49DB152BD38EC300A13511 /* Frameworks */,
+				4C49DB162BD38EC300A13511 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RealTimeBusWeightExtension;
+			productName = RealTimeBusWeightExtension;
+			productReference = 4C49DB182BD38EC300A13511 /* RealTimeBusWeightExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		4C80310E2BB9062C009ECCA9 /* RealTimeBus */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4C80311D2BB9062C009ECCA9 /* Build configuration list for PBXNativeTarget "RealTimeBus" */;
@@ -130,10 +216,12 @@
 				4C80310C2BB9062C009ECCA9 /* Frameworks */,
 				4C80310D2BB9062C009ECCA9 /* Resources */,
 				CC2322380376D5A58AC1BB49 /* [CP] Embed Pods Frameworks */,
+				4C49DB2D2BD38EC500A13511 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4C49DB2B2BD38EC400A13511 /* PBXTargetDependency */,
 			);
 			name = RealTimeBus;
 			productName = RealTimeBus;
@@ -147,9 +235,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1420;
+				LastSwiftUpdateCheck = 1430;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
+					4C49DB172BD38EC300A13511 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
 					4C80310E2BB9062C009ECCA9 = {
 						CreatedOnToolsVersion = 14.2;
 					};
@@ -169,11 +260,20 @@
 			projectRoot = "";
 			targets = (
 				4C80310E2BB9062C009ECCA9 /* RealTimeBus */,
+				4C49DB172BD38EC300A13511 /* RealTimeBusWeightExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		4C49DB162BD38EC300A13511 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C49DB262BD38EC400A13511 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4C80310D2BB9062C009ECCA9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -228,10 +328,22 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4C49DB142BD38EC300A13511 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C49DB282BD38EC400A13511 /* RealTimeBusWeight.intentdefinition in Sources */,
+				4C49DB212BD38EC400A13511 /* RealTimeBusWeightAttributes.swift in Sources */,
+				4C49DB232BD38EC400A13511 /* RealTimeBusWeightLiveActivity.swift in Sources */,
+				4C49DB1F2BD38EC400A13511 /* RealTimeBusWeightBundle.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4C80310B2BB9062C009ECCA9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C49DB312BD38FF300A13511 /* RealTimeBusWeightAttributes.swift in Sources */,
 				4CD2906F2BBB089C00A450F8 /* BusStationRow.swift in Sources */,
 				4C8031152BB9062C009ECCA9 /* ContentView.swift in Sources */,
 				4C8031272BB95899009ECCA9 /* UserDefaultsManager.swift in Sources */,
@@ -240,6 +352,7 @@
 				4CD35CC82BCA7E560021AED3 /* BusRowView.swift in Sources */,
 				4C04D7762BC43995007BF9CB /* Common.swift in Sources */,
 				7A5D14742BBD35BF00B34176 /* GetDataManager.swift in Sources */,
+				4C49DB292BD38EC400A13511 /* RealTimeBusWeight.intentdefinition in Sources */,
 				4C8031132BB9062C009ECCA9 /* RealTimeBusApp.swift in Sources */,
 				4C8031232BB91A96009ECCA9 /* BusDetailView.swift in Sources */,
 				4C8031252BB91C3B009ECCA9 /* BusDetail.swift in Sources */,
@@ -248,7 +361,71 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		4C49DB2B2BD38EC400A13511 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 4C49DB172BD38EC300A13511 /* RealTimeBusWeightExtension */;
+			targetProxy = 4C49DB2A2BD38EC400A13511 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		4C49DB2E2BD38EC500A13511 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7VCU9G6232;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RealTimeBusWeight/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RealTimeBusWeight;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liu5.RealTimeBus.RealTimeBus.RealTimeBusWeight;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		4C49DB2F2BD38EC500A13511 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7VCU9G6232;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RealTimeBusWeight/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RealTimeBusWeight;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liu5.RealTimeBus.RealTimeBus.RealTimeBusWeight;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		4C80311B2BB9062C009ECCA9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -299,7 +476,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -353,7 +530,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -367,6 +544,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C16CD4235051A7EBCA7E6487 /* Pods-RealTimeBus.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -376,12 +554,13 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "获取所在城市公交信息";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -399,6 +578,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 62B08F2291A726F8E10368B8 /* Pods-RealTimeBus.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -408,12 +588,13 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "获取所在城市公交信息";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -430,6 +611,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4C49DB302BD38EC500A13511 /* Build configuration list for PBXNativeTarget "RealTimeBusWeightExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C49DB2E2BD38EC500A13511 /* Debug */,
+				4C49DB2F2BD38EC500A13511 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4C80310A2BB9062C009ECCA9 /* Build configuration list for PBXProject "RealTimeBus" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

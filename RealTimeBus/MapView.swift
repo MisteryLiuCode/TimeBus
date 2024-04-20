@@ -26,6 +26,7 @@ struct MapView: UIViewRepresentable {
     }
 
     func updateAnnotations(mapView: MKMapView) {
+        print("刷新了地图")
         // 移除所有现有标注
         mapView.removeAnnotations(mapView.annotations)
 

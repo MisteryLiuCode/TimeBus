@@ -17,8 +17,7 @@ struct ContentView: View {
     @StateObject private var locationManager = LocationManager() // 添加位置管理器的状态对象
     // 根据是否是搜索结果显示不同的样式
     @State private var showingSearchResults = false
-    
-    
+
     var body: some View {
             NavigationView {
                 ZStack {
@@ -34,7 +33,7 @@ struct ContentView: View {
                         }
                     } else {
                         // 获取关注的公交线路
-                        List(UserDefaultsManager.shared.getFavoriteBus()) { busLine in
+                        List(busLines) { busLine in
                             favoriteBusView(busLine: busLine)
                         }
                         .navigationBarTitle("\(locationManager.city ?? "北京")公交")
@@ -57,6 +56,8 @@ struct ContentView: View {
                         // 刷新关注公交
                         refreshFavoriteBusLines()
                     }
+                    
+                    startActivity()
                 }
             }
         }
