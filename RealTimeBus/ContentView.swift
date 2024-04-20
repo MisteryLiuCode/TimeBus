@@ -47,6 +47,9 @@ struct ContentView: View {
                     showingSearchResults = !newValue.isEmpty
                     if !newValue.isEmpty {
                         fetchBusLines(searchText: newValue)
+                    }else {
+                        // 当搜索文本被清空，可能是用户点击了取消按钮
+                        refreshData()
                     }
                 }
                 .onAppear {
@@ -54,10 +57,8 @@ struct ContentView: View {
                     locationManager.requestLocation()
                     if searchText.isEmpty {
                         // 刷新关注公交
-                        refreshFavoriteBusLines()
+                        refreshData()
                     }
-                    
-                    startActivity()
                 }
             }
         }
@@ -68,6 +69,7 @@ struct ContentView: View {
         } else {
             refreshFavoriteBusLines()
         }
+        refreshFavoriteBusLines()
     }
 
 

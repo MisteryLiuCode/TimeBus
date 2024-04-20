@@ -24,10 +24,10 @@ func converToLineId(lineId: Int) -> String {
     return String(format: "%015d", lineId)
 }
 /// 开启灵动岛显示功能
-func startActivity(){
+func startActivity(busDetail:BusDetail){
     Task{
-        let attributes = RealTimeBusWeightAttributes(name:"我是名字")
-        let initialContentState = RealTimeBusWeightAttributes.ContentState(value: 100)
+        let attributes = RealTimeBusWeightAttributes(lineName: busDetail.lineName, stationName: busDetail.firstStation,estimatedArrival: "30")
+        let initialContentState = RealTimeBusWeightAttributes.ContentState(value: "5分钟")
         do {
             let myActivity = try Activity<RealTimeBusWeightAttributes>.request(
                 attributes: attributes,
@@ -44,7 +44,7 @@ func startActivity(){
 /// 更新灵动岛显示
 func updateActivity(){
     Task{
-        let updatedStatus = RealTimeBusWeightAttributes.ContentState(value: 2000)
+        let updatedStatus = RealTimeBusWeightAttributes.ContentState(value: "10分钟")
         for activity in Activity<RealTimeBusWeightAttributes>.activities{
             await activity.update(using: updatedStatus)
             print("已更新灵动岛显示 Value值已更新 请展开灵动岛查看")

@@ -82,6 +82,7 @@ struct BusDetailView: View {
             .onAppear {
                 viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: busDetail.stations[busDetail.stations.count - 1].id, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
                 checkFavorite()
+                startActivity(busDetail: busDetail)
             }
             
             HStack {

@@ -377,7 +377,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7VCU9G6232;
+				DEVELOPMENT_TEAM = 64ZUY76SLL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RealTimeBusWeight/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RealTimeBusWeight;
@@ -389,7 +389,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.liu5.RealTimeBus.RealTimeBus.RealTimeBusWeight;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liu19.RealTimeBus.RealTimeBus.RealTimeBusWeight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -405,7 +405,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7VCU9G6232;
+				DEVELOPMENT_TEAM = 64ZUY76SLL;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RealTimeBusWeight/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RealTimeBusWeight;
@@ -417,7 +417,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.liu5.RealTimeBus.RealTimeBus.RealTimeBusWeight;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liu19.RealTimeBus.RealTimeBus.RealTimeBusWeight;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -550,7 +550,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RealTimeBus/Preview Content\"";
-				DEVELOPMENT_TEAM = 7VCU9G6232;
+				DEVELOPMENT_TEAM = 64ZUY76SLL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "获取所在城市公交信息";
@@ -566,7 +566,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.liu5.RealTimeBus.RealTimeBus;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liu19.RealTimeBus.RealTimeBus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -584,7 +584,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RealTimeBus/Preview Content\"";
-				DEVELOPMENT_TEAM = 7VCU9G6232;
+				DEVELOPMENT_TEAM = 64ZUY76SLL;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "获取所在城市公交信息";
@@ -600,7 +600,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.liu5.RealTimeBus.RealTimeBus;
+				PRODUCT_BUNDLE_IDENTIFIER = com.liu19.RealTimeBus.RealTimeBus;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
