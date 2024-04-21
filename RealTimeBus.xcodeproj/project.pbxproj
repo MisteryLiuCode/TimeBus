@@ -29,6 +29,8 @@
 		4CD290712BBB08BB00A450F8 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD290702BBB08BB00A450F8 /* LocationManager.swift */; };
 		4CD35CC82BCA7E560021AED3 /* BusRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD35CC72BCA7E560021AED3 /* BusRowView.swift */; };
 		4CD35CCA2BCA7E7F0021AED3 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CD35CC92BCA7E7F0021AED3 /* MapView.swift */; };
+		4CDAA13C2BD4FB8F007D720F /* LiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDAA13B2BD4FB8F007D720F /* LiveActivity.swift */; };
+		4CDAA13E2BD5023A007D720F /* FavoriteOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CDAA13D2BD5023A007D720F /* FavoriteOption.swift */; };
 		FFCB748197F1AE04C1D784D3 /* Pods_RealTimeBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0736152FE92B9554B7F940F5 /* Pods_RealTimeBus.framework */; };
 /* End PBXBuildFile section */
 
@@ -80,6 +82,8 @@
 		4CD290702BBB08BB00A450F8 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		4CD35CC72BCA7E560021AED3 /* BusRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BusRowView.swift; sourceTree = "<group>"; };
 		4CD35CC92BCA7E7F0021AED3 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		4CDAA13B2BD4FB8F007D720F /* LiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivity.swift; sourceTree = "<group>"; };
+		4CDAA13D2BD5023A007D720F /* FavoriteOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteOption.swift; sourceTree = "<group>"; };
 		62B08F2291A726F8E10368B8 /* Pods-RealTimeBus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeBus.release.xcconfig"; path = "Target Support Files/Pods-RealTimeBus/Pods-RealTimeBus.release.xcconfig"; sourceTree = "<group>"; };
 		C16CD4235051A7EBCA7E6487 /* Pods-RealTimeBus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RealTimeBus.debug.xcconfig"; path = "Target Support Files/Pods-RealTimeBus/Pods-RealTimeBus.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -153,6 +157,8 @@
 				4CD290702BBB08BB00A450F8 /* LocationManager.swift */,
 				4C04D7752BC43995007BF9CB /* Common.swift */,
 				4CD35CC72BCA7E560021AED3 /* BusRowView.swift */,
+				4CDAA13B2BD4FB8F007D720F /* LiveActivity.swift */,
+				4CDAA13D2BD5023A007D720F /* FavoriteOption.swift */,
 			);
 			path = RealTimeBus;
 			sourceTree = "<group>";
@@ -245,11 +251,12 @@
 			};
 			buildConfigurationList = 4C80310A2BB9062C009ECCA9 /* Build configuration list for PBXProject "RealTimeBus" */;
 			compatibilityVersion = "Xcode 14.0";
-			developmentRegion = en;
+			developmentRegion = "zh-Hans";
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				"zh-Hans",
 			);
 			mainGroup = 4C8031062BB9062C009ECCA9;
 			productRefGroup = 4C8031102BB9062C009ECCA9 /* Products */;
@@ -342,12 +349,14 @@
 			files = (
 				4C49DB312BD38FF300A13511 /* RealTimeBusWeightAttributes.swift in Sources */,
 				4CD2906F2BBB089C00A450F8 /* BusStationRow.swift in Sources */,
+				4CDAA13E2BD5023A007D720F /* FavoriteOption.swift in Sources */,
 				4C8031152BB9062C009ECCA9 /* ContentView.swift in Sources */,
 				4C8031272BB95899009ECCA9 /* UserDefaultsManager.swift in Sources */,
 				4CD35CCA2BCA7E7F0021AED3 /* MapView.swift in Sources */,
 				4CD290712BBB08BB00A450F8 /* LocationManager.swift in Sources */,
 				4CD35CC82BCA7E560021AED3 /* BusRowView.swift in Sources */,
 				4C04D7762BC43995007BF9CB /* Common.swift in Sources */,
+				4CDAA13C2BD4FB8F007D720F /* LiveActivity.swift in Sources */,
 				4C49DB292BD38EC400A13511 /* RealTimeBusWeight.intentdefinition in Sources */,
 				4C8031132BB9062C009ECCA9 /* RealTimeBusApp.swift in Sources */,
 				4C8031232BB91A96009ECCA9 /* BusDetailView.swift in Sources */,

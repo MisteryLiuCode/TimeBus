@@ -13,17 +13,19 @@ class BusViewModel: ObservableObject {
     @Published var longitude: Double = 116.397455
     @Published var latitude: Double = 39.909187
     @Published var mapDesc: String = "加载中..."
+    @Published var direc: String = ""
     
+    func getDirec(busId: Int){
+        direc = UserDefaultsManager.shared.getFavoriteDirec(for: busId)
+    }
     
-    // 请求参数和响应数据结构
+    // 请求参数
     struct RequestParams: Codable {
         let lineName: String
         let stationId: Int
         let lineId: String
     }
-    
-    
-    // 调用实时公交接口
+    // 响应映射实时公交信息
     struct RealTimeInfo: Decodable {
         let detailDesc: String
         let arriveTime: Int
@@ -64,10 +66,10 @@ class BusViewModel: ObservableObject {
         let desc: String
     }
 
-    // 获取关注的staionId，最近一站的经纬度，如果没有，返回关注的站位置
+    // 获取关注的位置和时间描述
     func getTimeStaionLocation(bus: BusDetail) {
         if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: bus.id)?.stationId {
-            print("开始获取地图公交信息")
+            print("开始获取地图公交\(bus.lineName)信息")
             let params = RequestParams(lineName: bus.lineName, stationId: favoriteStationId, lineId: converToLineId(lineId: bus.id))
             AF.request("http://47.99.71.232:8083/timeBus/busMap", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
                 switch response.result {
@@ -126,9 +128,24 @@ struct BusRowView: View {
 
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 5) {
-                    Text("**\(bus.lineName)**")
-                        .font(.headline)
-                        .fixedSize(horizontal: false, vertical: true) // Ensures the text wraps within the available space.
+                    // 线路名称与方向突出显示
+                    HStack {
+                        Text("\(bus.lineName)")
+                            .font(.headline)
+                            .fontWeight(.bold)
+
+                        // 使用viewModel.direc枚举控制显示逻辑
+                        if viewModel.direc != "仅收藏" {
+                            Text(viewModel.direc)
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(viewModel.direc == "上班方向" ? .green : .red)
+                                .padding(5)
+                                .background(viewModel.direc == "上班方向" ? Color.green.opacity(0.2) : Color.red.opacity(0.2))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        }
+                    }
+
                     Image(systemName: "heart.fill").foregroundColor(.red)
                     Text("起点: **\(bus.stations[0].stopName)**")
                         .font(.caption)
@@ -150,6 +167,7 @@ struct BusRowView: View {
                 }
                 .onAppear {
                     viewModel.fetchBusTime(bus: bus)
+                    viewModel.getDirec(busId: bus.id)
                 }
 
                 Spacer()

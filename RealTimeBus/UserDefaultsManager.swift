@@ -10,6 +10,7 @@ struct FavoriteBusStation: Codable {
     let busDetail: BusDetail
     let stationId: Int
     let dateAdded: Date
+    let directions: String
 }
 
 struct DetailViewBus: Codable {
@@ -25,8 +26,8 @@ class UserDefaultsManager {
 
     private init() {}
 
-    func saveFavorite(busDetail: BusDetail, stationId: Int) {
-        let favorite = FavoriteBusStation(busDetail: busDetail, stationId: stationId,dateAdded: Date())
+    func saveFavorite(busDetail: BusDetail, stationId: Int,directions: String) {
+        let favorite = FavoriteBusStation(busDetail: busDetail, stationId: stationId,dateAdded: Date(),directions: directions)
 
         // 将更新后的收藏列表编码并保存
         if let encodedFavorites = try? JSONEncoder().encode(favorite) {
@@ -72,6 +73,10 @@ class UserDefaultsManager {
     
     func getFavoriteBus() -> [BusDetail] {
         return getFavorites().map { $0.busDetail }
+    }
+    
+    func getFavoriteDirec(for busId: Int) -> String {
+        return getFavorites().first(where: { $0.busDetail.id == busId })?.directions ?? ""
     }
 
     // Remove favorite

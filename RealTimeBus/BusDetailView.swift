@@ -67,6 +67,9 @@ struct BusDetailView: View {
     @StateObject private var viewModel = ViewModel()
     @State private var isFavorite: Bool = false
     @State private var selectedStationId: Int?
+    @State private var showingFavoriteOptions = false
+    @State private var favoriteOption: String = ""
+
     // 创建一个定时器，每10秒触发一次
     let timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     var body: some View {
@@ -136,18 +139,28 @@ struct BusDetailView: View {
         }
         .navigationTitle("线路 \(busDetail.lineName)")
         .navigationBarTitleDisplayMode(.inline)
+        .actionSheet(isPresented: $showingFavoriteOptions) {
+            ActionSheet(
+                title: Text("选择公交关注标志"),
+                buttons: FavoriteOption.allCases.map { option in
+                    .default(Text(option.displayName)) {
+                        favoriteOption = option.rawValue
+                        saveFavorite(option: option)
+                    }
+                } + [.cancel()]
+            )
+        }
+
     }
 
-    // 关注/取消站点
+    // 关注/取消关注
     func toggleFavorite() {
-        
-        if isFavorite{
+        if isFavorite {
             UserDefaultsManager.shared.removeFavorite(busId: busDetail.id)
+            isFavorite = false
         } else {
-            let stationId = selectedStationId ?? busDetail.stations[busDetail.stations.count - 1].id
-            UserDefaultsManager.shared.saveFavorite(busDetail: busDetail, stationId: stationId)
+            showingFavoriteOptions = true
         }
-        isFavorite.toggle()
     }
 
     // 检查是否关注
@@ -165,4 +178,11 @@ struct BusDetailView: View {
             viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: selectedStationId!, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
         }
     }
+    func saveFavorite(option: FavoriteOption) {
+        let stationId = selectedStationId ?? busDetail.stations.last?.id ?? 0
+//            UserDefaultsManager.shared.saveFavorite(busDetail: busDetail, stationId: stationId, attribute: option.rawValue)
+        UserDefaultsManager.shared.saveFavorite(busDetail: busDetail, stationId: stationId,directions: option.displayName)
+        isFavorite = true
+    }
+
 }

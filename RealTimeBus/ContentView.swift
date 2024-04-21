@@ -6,188 +6,124 @@
 //
 
 import SwiftUI
+import Combine
 import Alamofire
 
 struct ContentView: View {
-    // 搜索
-    @State private var searchText = ""
-    // 公交线路数组
-    @State private var busLines = [BusDetail]()
-    // 访问位置,显示城市公交,比如北京
-    @StateObject private var locationManager = LocationManager() // 添加位置管理器的状态对象
-    // 根据是否是搜索结果显示不同的样式
-    @State private var showingSearchResults = false
+    @StateObject private var viewModel = BusContentViewModel()
+    @StateObject private var locationManager = LocationManager()
 
     var body: some View {
-            NavigationView {
-                ZStack {
-                    // 搜索结果显示的数据和样式
-                    if showingSearchResults {
-                        List(filteredBusLines) { busLine in
-                            searchResultsView(busLine: busLine)
-                        }
-                        // 获取当前位置的城市
-                        .navigationBarTitle("\(locationManager.city ?? "北京")公交搜索结果")
-                        .refreshable {
-                            refreshData()
-                        }
-                    } else {
-                        // 获取关注的公交线路
-                        List(busLines) { busLine in
-                            favoriteBusView(busLine: busLine)
-                        }
-                        .navigationBarTitle("\(locationManager.city ?? "北京")公交")
-                        .refreshable {
-                            refreshData()
-                        }
+        NavigationView {
+            ZStack {
+                if viewModel.showingSearchResults {
+                    List(viewModel.busLines, id: \.id) { busLine in
+                        searchResultsView(busLine: busLine)
                     }
-                }
-                .searchable(text: $searchText, prompt: "搜索公交线路")
-                .onChange(of: searchText) { newValue in
-                    showingSearchResults = !newValue.isEmpty
-                    if !newValue.isEmpty {
-                        fetchBusLines(searchText: newValue)
-                    }else {
-                        // 当搜索文本被清空，可能是用户点击了取消按钮
-                        refreshData()
+                    .navigationBarTitle("\(locationManager.city ?? "北京")公交搜索结果")
+                } else {
+                    List(viewModel.busLines, id: \.id) { busLine in
+                        favoriteBusView(busLine: busLine)
                     }
-                }
-                .onAppear {
-                    // 请求位置
-                    locationManager.requestLocation()
-                    if searchText.isEmpty {
-                        // 刷新关注公交
-                        refreshData()
+                    .navigationBarTitle("\(locationManager.city ?? "北京")公交")
+                    .refreshable {
+                        viewModel.loadFavoriteBusLines()
                     }
                 }
             }
+            .searchable(text: $viewModel.searchText, prompt: "搜索公交线路")
+            .onChange(of: viewModel.searchText) { newValue in
+                viewModel.showingSearchResults = !newValue.isEmpty
+                viewModel.fetchBusLines(for: newValue)
+            }
+            .onAppear {
+                locationManager.requestLocation()
+                if viewModel.searchText.isEmpty {
+                    viewModel.loadFavoriteBusLines()
+                }
+            }
         }
-    
-    func refreshData() {
-        if showingSearchResults {
-            fetchBusLines(searchText: searchText)
-        } else {
-            refreshFavoriteBusLines()
-        }
-        refreshFavoriteBusLines()
     }
 
-
-
-    
     func favoriteBusView(busLine: BusDetail) -> some View {
-            ZStack {
-                BusRowView(bus: busLine)
-                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                        Label("love", systemImage: "heart.slash")
-                            .tint(.green)
-                    }
-                    .background(
-                        NavigationLink(destination: BusDetailView(busDetail: busLine)) {
-                            EmptyView()  // Empty view for the NavigationLink
-                        }
-                        .opacity(0) // Make NavigationLink completely transparent
-                    )
-            }
-        }
-    
-    func searchResultsView(busLine: BusDetail) -> some View {
-            NavigationLink(destination: BusDetailView(busDetail: busLine)) {
-                HStack {
-                    Image(systemName: "bus")
-                    VStack(alignment: .leading) {
-                        Text(busLine.lineName)
-                            .fontWeight(.bold)
-                        Text(busLine.description ?? "")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                    }
+        NavigationLink(destination: BusDetailView(busDetail: busLine)) {
+            BusRowView(bus: busLine)
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Label("Remove", systemImage: "heart.slash").tint(.red)
                 }
+        }
+    }
+
+    func searchResultsView(busLine: BusDetail) -> some View {
+        NavigationLink(destination: BusDetailView(busDetail: busLine)) {
+            VStack(alignment: .leading) {
+                Text(busLine.lineName).fontWeight(.bold)
+                Text(busLine.description ?? "").font(.subheadline).foregroundColor(.gray)
             }
         }
-    
+    }
+}
 
-    // 根据搜索文本过滤线路
-    var filteredBusLines: [BusDetail] {
-            if searchText.isEmpty {
-                return []
-            } else {
-                return busLines.filter { $0.lineName.contains(searchText) || $0.description.contains(searchText) }
-            }
-        }
+class BusContentViewModel: ObservableObject {
+    @Published var busLines: [BusDetail] = []
+    @Published var showingSearchResults: Bool = false
+    @Published var errorMessage: String?
+    @Published var searchText: String = ""
+
+    init() {
+        loadFavoriteBusLines()
+    }
     
-    func refreshFavoriteBusLines() {
-            // 假设`UserDefaultsManager.shared.getFavoriteBus()`
-            // 是同步返回最新的收藏公交线路数组的函数。
-            busLines = UserDefaultsManager.shared.getFavoriteBus()
-            print("最爱公交线路列表已刷新")
+    func fetchBusLines(for searchText: String) {
+        guard !searchText.isEmpty else {
+            loadFavoriteBusLines()
+            return
         }
 
-    
-    func fetchBusLines(searchText: String) {
+        // 先检查本地缓存
         do {
-            // 读取本地缓存,如果没有再调用接口获取
-            let busLines = try UserDefaultsManager.shared.getSearchData(searchText: searchText)
-            if !busLines.isEmpty {
-                print("使用本地搜索数据")
-                self.busLines = busLines
+            let cachedBusLines = try UserDefaultsManager.shared.getSearchData(searchText: searchText)
+            if !cachedBusLines.isEmpty {
+                self.busLines = cachedBusLines
                 return
             }
         } catch {
-            // 如果错误被抛出，就会运行这里的代码
-            print("使用本地搜索数据异常: \(error)")
+            self.errorMessage = "本地数据读取错误: \(error)"
         }
-        // 本地没有,读取接口数据
-        AF.request("\(busDataByLineNameUrl)\(searchText)", method: .get).responseData {response in
+
+        // 发送网络请求获取数据
+        AF.request("\(busDataByLineNameUrl)\(searchText)", method: .get).responseData { [weak self] response in
+            guard let self = self else { return }
             switch response.result {
             case .success(let data):
-                do {
-                    let decoder = JSONDecoder()
-                    // 直接解码 ResponseData
-                    let responseData = try decoder.decode(ResponseData.self, from: data)
-                    if responseData.code == 200 {
-                        DispatchQueue.main.async {
-                            // 使用data字段上的JSON字符串来解码BusDetail数组
-                            if let busLinesData = responseData.data.data(using: .utf8) {
-                                do {
-                                    let busLines = try decoder.decode([BusDetail].self, from: busLinesData)
-                                    self.busLines = busLines
-                                    do {
-                                        print("开始把搜索数据保存到本地")
-                                        try UserDefaultsManager.shared.savaSearchData(searchText: searchText, data: busLines)
-                                    } catch {
-                                        // 如果错误被抛出，就会运行这里的代码
-                                        print("把搜索数据保存到本地失败: \(error)")
-                                    }
-                                } catch {
-                                    print("无法解析busLines: \(error)")
-                                    self.busLines = []
-                                }
-                            }
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            self.busLines = []
-                        }
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        print("解析响应错误: \(error)")
-                        self.busLines = []
-                    }
-                }
+                self.handleSuccess(data: data)
             case .failure(let error):
-                DispatchQueue.main.async {
-                    print("请求失败: \(error)")
-                    self.busLines = []
-                }
+                self.errorMessage = "网络请求失败: \(error.localizedDescription)"
+                self.busLines = []
             }
         }
     }
-}
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+    private func handleSuccess(data: Data) {
+        do {
+            let decoder = JSONDecoder()
+            let responseData = try decoder.decode(ResponseData.self, from: data)
+            if responseData.code == 200, let busLinesData = responseData.data.data(using: .utf8) {
+                let busLines = try decoder.decode([BusDetail].self, from: busLinesData)
+                DispatchQueue.main.async {
+                    self.busLines = busLines
+                    UserDefaultsManager.shared.savaSearchData(searchText: self.searchText, data: busLines)
+                }
+            } else {
+                self.errorMessage = "无效的服务器响应码: \(responseData.code)"
+            }
+        } catch {
+            self.errorMessage = "解析数据错误: \(error.localizedDescription)"
+        }
+    }
+
+    func loadFavoriteBusLines() {
+        self.busLines = UserDefaultsManager.shared.getFavoriteBus()
     }
 }
+
