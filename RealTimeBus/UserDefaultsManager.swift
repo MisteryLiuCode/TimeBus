@@ -12,10 +12,16 @@ struct FavoriteBusStation: Codable {
     let dateAdded: Date
 }
 
+struct DetailViewBus: Codable {
+    let busDetail: BusDetail
+    let stationId: Int
+}
+
 class UserDefaultsManager {
     static let shared = UserDefaultsManager()
     private let favoriteBusStationKey = "FavoriteBusStation"
     private let searchKey = "search"
+    private let detailViewKey = "detailViewKey"
 
     private init() {}
 
@@ -83,12 +89,33 @@ class UserDefaultsManager {
     }
     
     // 用于获取关注的站点,不一定有关注,没关注,上层逻辑会处理
-    func getFavoriteStationId(for busId: Int) -> Int? {
+    func getFavoriteStationId(for busId: Int) -> FavoriteBusStation? {
         // 同样使用getFavorites()方法获取所有收藏项
         let favorites = getFavorites()
 
         // 尝试找到匹配的busId，如果找到，返回相应的stationId
-        return favorites.first(where: { $0.busDetail.id == busId })?.stationId
+        return favorites.first(where: { $0.busDetail.id == busId })
     }
     
+    
+    // 保存进入详情的数据
+    func savaDetailViewData(busDetail: BusDetail, stationId: Int) {
+        let detailData = DetailViewBus(busDetail: busDetail, stationId: stationId)
+        // 将搜索数据保存
+        if let encodedDetailViewData = try? JSONEncoder().encode(detailData) {
+            UserDefaults.standard.set(encodedDetailViewData, forKey: detailViewKey)
+        }
+    }
+    
+    func getDetailViewData() ->DetailViewBus? {
+        if let detailViewData = UserDefaults.standard.data(forKey: detailViewKey),
+            let detail = try? JSONDecoder().decode(DetailViewBus.self, from: detailViewData){
+            return detail
+        }
+        return nil
+    }
+    
+    func removeDetailViewData() {
+        UserDefaults.standard.removeObject(forKey: detailViewKey)
+    }
 }

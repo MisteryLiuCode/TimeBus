@@ -10,6 +10,14 @@ import SwiftUI
 
 class ViewModel: ObservableObject {
     @Published var busTimeInfo: String = "加载中..."
+    @Published var arriveTime: Int = -1
+    
+    // 实时更新灵动岛信息
+    func updateActivityTime(){
+        if let detailViewData = UserDefaultsManager.shared.getDetailViewData(){
+            fetchBusTime(lineName: detailViewData.busDetail.lineName, stationId: detailViewData.stationId, lineId: converToLineId(lineId: detailViewData.busDetail.id))
+        }
+    }
 
     // 请求参数
     struct RequestParams: Codable {
@@ -18,6 +26,10 @@ class ViewModel: ObservableObject {
         let lineId: String
     }
     // 调用实时公交接口
+    struct RealTimeInfo: Decodable {
+        let detailDesc: String
+        let arriveTime: Int
+    }
     func fetchBusTime(lineName: String, stationId: Int, lineId: String) {
         print("开始调用实时公交接口")
         let params = RequestParams(lineName: lineName, stationId: stationId, lineId: lineId)
@@ -27,18 +39,22 @@ class ViewModel: ObservableObject {
                 do {
                     let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
                     if responseData.code == 200 {
-                        DispatchQueue.main.async {
-                            self.busTimeInfo = responseData.data
+                        if let dataFromString = responseData.data.data(using: .utf8) {
+                            let realTimeInfo = try JSONDecoder().decode(RealTimeInfo.self, from: dataFromString)
+                            DispatchQueue.main.async {
+                                print("调用实时公交接口结果：\(realTimeInfo)")
+                                self.busTimeInfo = realTimeInfo.detailDesc
+                                self.arriveTime = realTimeInfo.arriveTime
+                            }
                         }
                     } else {
-                        self.busTimeInfo = "获取信息失败: \(responseData.message)"
+                        print("调用实时公交接口获取信息失败: \(responseData.message)")
                     }
                 } catch {
-                    print("解析响应失败: \(error)")
-                    self.busTimeInfo = "解析信息失败"
+                    print("调用实时公交接口解析信息失败: \(error)")
                 }
             case .failure(let error):
-                print("请求失败: \(error)")
+                print("调用实时公交接口请求失败: \(error)")
                 self.busTimeInfo = "请求信息失败"
             }
         }
@@ -51,6 +67,8 @@ struct BusDetailView: View {
     @StateObject private var viewModel = ViewModel()
     @State private var isFavorite: Bool = false
     @State private var selectedStationId: Int?
+    // 创建一个定时器，每10秒触发一次
+    let timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     var body: some View {
         VStack {
             VStack(alignment: .leading, spacing: 10) {
@@ -75,14 +93,22 @@ struct BusDetailView: View {
                     .buttonStyle(.bordered)
                 }
             }
+            .onReceive(timer) { _ in
+                viewModel.updateActivityTime()
+                    }
+            .onReceive(viewModel.$arriveTime) { newValue in
+                        updateActivity(arriveTime: newValue)
+                    }
             .padding()
             .background(Color(.systemGray6))
             .cornerRadius(10)
             .padding(.horizontal)
             .onAppear {
-                viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: busDetail.stations[busDetail.stations.count - 1].id, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
+                endActivity()
                 checkFavorite()
-                startActivity(busDetail: busDetail)
+                startActivity(busDetail: busDetail,favoriteStationId:selectedStationId ?? busDetail.stations[busDetail.stations.count - 1].id,arriveTime: viewModel.arriveTime)
+                UserDefaultsManager.shared.removeDetailViewData()
+                UserDefaultsManager.shared.savaDetailViewData(busDetail: busDetail, stationId: selectedStationId!)
             }
             
             HStack {
@@ -129,12 +155,14 @@ struct BusDetailView: View {
         isFavorite = UserDefaultsManager.shared.isFavorite(busId: busDetail.id)
         if isFavorite {
             // Check and update the selectedStationId if the current bus is a favorite
-            if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: busDetail.id) {
+            if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: busDetail.id)?.stationId {
                 selectedStationId = favoriteStationId
+                viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: selectedStationId!, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
             }
         }else{
             print("没有关注站点,默认选择最后一个")
-            viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: busDetail.stations[busDetail.stations.count - 1].id, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
+            selectedStationId = busDetail.stations[busDetail.stations.count - 1].id
+            viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: selectedStationId!, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
         }
     }
 }

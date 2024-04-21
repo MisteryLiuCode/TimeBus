@@ -12,11 +12,10 @@ import SwiftUI
 struct RealTimeBusWeightAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         // Dynamic stateful properties about your activity go here!
-        var value: String
+        var estimatedArrival: Int
     }
 
     // Fixed non-changing properties about your activity go here!
     var lineName: String
     var stationName: String
-    var estimatedArrival: String
 }

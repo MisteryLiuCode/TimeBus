@@ -23,11 +23,14 @@ func converToLineId(lineId: Int) -> String {
     // 使用格式化字符串来指定输出长度和前导零
     return String(format: "%015d", lineId)
 }
+
+
 /// 开启灵动岛显示功能
-func startActivity(busDetail:BusDetail){
-    Task{
-        let attributes = RealTimeBusWeightAttributes(lineName: busDetail.lineName, stationName: busDetail.firstStation,estimatedArrival: "30")
-        let initialContentState = RealTimeBusWeightAttributes.ContentState(value: "5分钟")
+func startActivity(busDetail: BusDetail, favoriteStationId: Int,arriveTime: Int) {
+    Task {
+        let favoriteStationName: String? = UserDefaultsManager.shared.getFavoriteStationId(for: busDetail.id)?.busDetail.stations.first(where: { $0.id == favoriteStationId })?.stopName
+        let attributes = RealTimeBusWeightAttributes(lineName: busDetail.lineName, stationName: favoriteStationName ?? "未知站")
+        let initialContentState = RealTimeBusWeightAttributes.ContentState(estimatedArrival: arriveTime)
         do {
             let myActivity = try Activity<RealTimeBusWeightAttributes>.request(
                 attributes: attributes,
@@ -41,13 +44,14 @@ func startActivity(busDetail:BusDetail){
     }
 }
 
+
 /// 更新灵动岛显示
-func updateActivity(){
+func updateActivity(arriveTime: Int){
     Task{
-        let updatedStatus = RealTimeBusWeightAttributes.ContentState(value: "10分钟")
+        let updatedStatus = RealTimeBusWeightAttributes.ContentState(estimatedArrival: arriveTime)
         for activity in Activity<RealTimeBusWeightAttributes>.activities{
             await activity.update(using: updatedStatus)
-            print("已更新灵动岛显示 Value值已更新 请展开灵动岛查看")
+            print("已更新灵动岛显示 arriveTime值已更新 请展开灵动岛查看")
         }
     }
 }

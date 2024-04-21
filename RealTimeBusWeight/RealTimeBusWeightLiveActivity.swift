@@ -36,7 +36,7 @@ struct RealTimeBusWeightLiveActivity: Widget {
                         
                         Spacer()
                         
-                        Text("\(context.attributes.estimatedArrival)分钟")
+                        Text("\(context.state.estimatedArrival)分钟")
                             .bold()
                             .font(.title)
                             .foregroundColor(.green)
@@ -55,7 +55,7 @@ struct RealTimeBusWeightLiveActivity: Widget {
             .background(RoundedRectangle(cornerRadius: 25).fill(LinearGradient(gradient: Gradient(colors: [Color(UIColor.systemGray6), Color(UIColor.systemBackground)]), startPoint: .topLeading, endPoint: .bottomTrailing)))
             .clipShape(RoundedRectangle(cornerRadius: 25))
             .shadow(color: Color.gray.opacity(0.3), radius: 10, x: 0, y: 5)
-            .animation(.easeInOut, value: context.attributes.estimatedArrival)
+            .animation(.easeInOut, value: context.state.estimatedArrival)
         }
     
     dynamicIsland: { context in
@@ -64,7 +64,7 @@ struct RealTimeBusWeightLiveActivity: Widget {
                 Image(systemName: "bus.fill")
             }
             DynamicIslandExpandedRegion(.trailing) {
-                Text("\(context.attributes.estimatedArrival)分钟")
+                Text("\(context.state.estimatedArrival)分钟")
                     .font(.headline)
             }
             DynamicIslandExpandedRegion(.center) {
@@ -84,7 +84,7 @@ struct RealTimeBusWeightLiveActivity: Widget {
             Image(systemName: "bus.fill")
                 .imageScale(.small)
         } compactTrailing: {
-            Text("\(context.attributes.estimatedArrival)分钟")
+            Text("\(context.state.estimatedArrival)分钟")
                 .font(.caption2)
         } minimal: {
             Image(systemName: "timer.circle.fill")

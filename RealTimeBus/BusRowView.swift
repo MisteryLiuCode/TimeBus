@@ -10,8 +10,8 @@ import Alamofire
 // 视图模型
 class BusViewModel: ObservableObject {
     @Published var busReatimeInfo: String = "加载中..."
-    @State var longitude: Double = 116.397455
-    @State var latitude: Double = 39.909187
+    @Published var longitude: Double = 116.397455
+    @Published var latitude: Double = 39.909187
     @Published var mapDesc: String = "加载中..."
     
     
@@ -21,9 +21,16 @@ class BusViewModel: ObservableObject {
         let stationId: Int
         let lineId: String
     }
+    
+    
+    // 调用实时公交接口
+    struct RealTimeInfo: Decodable {
+        let detailDesc: String
+        let arriveTime: Int
+    }
     func fetchBusTime(bus: BusDetail) {
         print("开始获取实时公交信息")
-        if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: bus.id) {
+        if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: bus.id)?.stationId {
         let params = RequestParams(lineName: bus.lineName, stationId: favoriteStationId, lineId: converToLineId(lineId: bus.id))
         AF.request("http://47.99.71.232:8083/timeBus/busRealtime", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
             switch response.result {
@@ -31,12 +38,15 @@ class BusViewModel: ObservableObject {
                 do {
                     let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
                     if responseData.code == 200 {
-                        DispatchQueue.main.async {
-                            print("获取实时公交信息结果:\(responseData.data)")
-                            self.busReatimeInfo = responseData.data
+                        if let dataFromString = responseData.data.data(using: .utf8) {
+                            let realTimeInfo = try JSONDecoder().decode(RealTimeInfo.self, from: dataFromString)
+                            DispatchQueue.main.async {
+                                print("调用实时公交接口结果：\(realTimeInfo)")
+                                self.busReatimeInfo = realTimeInfo.detailDesc
+                            }
                         }
                     } else {
-                        self.busReatimeInfo = "获取信息失败: \(responseData.message)"
+                        print("调用实时公交接口获取信息失败: \(responseData.message)")
                     }
                 } catch {
                     self.busReatimeInfo = "解析信息失败"
@@ -46,7 +56,8 @@ class BusViewModel: ObservableObject {
             }
         }
     }
-    }
+}
+    
     struct StationLocation: Decodable {
         let longitude: Double
         let latitude: Double
@@ -55,7 +66,7 @@ class BusViewModel: ObservableObject {
 
     // 获取关注的staionId，最近一站的经纬度，如果没有，返回关注的站位置
     func getTimeStaionLocation(bus: BusDetail) {
-        if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: bus.id) {
+        if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: bus.id)?.stationId {
             print("开始获取地图公交信息")
             let params = RequestParams(lineName: bus.lineName, stationId: favoriteStationId, lineId: converToLineId(lineId: bus.id))
             AF.request("http://47.99.71.232:8083/timeBus/busMap", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
@@ -93,7 +104,8 @@ class BusViewModel: ObservableObject {
 struct BusRowView: View {
     @ObservedObject var bus: BusDetail
     @StateObject var viewModel = BusViewModel()
-    
+    // 创建一个定时器，每10秒触发一次
+    let timer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
     
     var body: some View {
         VStack {
@@ -104,11 +116,13 @@ struct BusRowView: View {
                 .padding(.vertical, 5.0)
                 .frame(height: 150)
                 .onAppear {
-                    print("获取公交实时时间,并显示在地图上")
+                    print("获取公交实时时间")
                     viewModel.getTimeStaionLocation(bus: bus)
                 }.onReceive(viewModel.$mapDesc, perform: { _ in
                     // 当经纬度更新时重新渲染地图
-                })
+                }).onReceive(timer) { _ in
+                    viewModel.getTimeStaionLocation(bus: bus)
+                        }
 
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 5) {
