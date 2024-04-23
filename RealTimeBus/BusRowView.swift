@@ -9,10 +9,10 @@ import Alamofire
 
 // 视图模型
 class BusViewModel: ObservableObject {
-    @Published var busReatimeInfo: String = "加载中..."
+    @Published var busReatimeInfo: String = "没有车"
     @Published var longitude: Double = 116.397455
     @Published var latitude: Double = 39.909187
-    @Published var mapDesc: String = "加载中..."
+    @Published var mapDesc: String = "没有车"
     @Published var direc: String = ""
     
     func getDirec(busId: Int){
@@ -25,45 +25,18 @@ class BusViewModel: ObservableObject {
         let stationId: Int
         let lineId: String
     }
-    // 响应映射实时公交信息
-    struct RealTimeInfo: Decodable {
-        let detailDesc: String
-        let arriveTime: Int
-    }
-    func fetchBusTime(bus: BusDetail) {
-        print("开始获取实时公交信息")
-        if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: bus.id)?.stationId {
-        let params = RequestParams(lineName: bus.lineName, stationId: favoriteStationId, lineId: converToLineId(lineId: bus.id))
-        AF.request("http://47.99.71.232:8083/timeBus/busRealtime", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
-            switch response.result {
-            case .success(let data):
-                do {
-                    let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
-                    if responseData.code == 200 {
-                        if let dataFromString = responseData.data.data(using: .utf8) {
-                            let realTimeInfo = try JSONDecoder().decode(RealTimeInfo.self, from: dataFromString)
-                            DispatchQueue.main.async {
-                                print("调用实时公交接口结果：\(realTimeInfo)")
-                                self.busReatimeInfo = realTimeInfo.detailDesc
-                            }
-                        }
-                    } else {
-                        print("调用实时公交接口获取信息失败: \(responseData.message)")
-                    }
-                } catch {
-                    self.busReatimeInfo = "解析信息失败"
-                }
-            case .failure(let error):
-                self.busReatimeInfo = "请求信息失败"
-            }
-        }
-    }
-}
     
     struct StationLocation: Decodable {
         let longitude: Double
         let latitude: Double
-        let desc: String
+        let arriveStationName: String
+        let timeBusDTOList: [TimeBusDTO]
+    }
+    
+    struct TimeBusDTO: Decodable{
+        let level: Int
+        let stationDistance: Int
+        let arriveTime: Int
     }
 
     // 获取关注的位置和时间描述
@@ -71,7 +44,7 @@ class BusViewModel: ObservableObject {
         if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: bus.id)?.stationId {
             print("开始获取地图公交\(bus.lineName)信息")
             let params = RequestParams(lineName: bus.lineName, stationId: favoriteStationId, lineId: converToLineId(lineId: bus.id))
-            AF.request("http://47.99.71.232:8083/timeBus/busMap", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
+            AF.request("http://47.99.71.232:8083/timeBus/busRealtime", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
                 switch response.result {
                 case .success(let data):
                     do {
@@ -80,10 +53,25 @@ class BusViewModel: ObservableObject {
                             if let dataFromString = responseData.data.data(using: .utf8) {
                                 let stationLocation = try JSONDecoder().decode(StationLocation.self, from: dataFromString)
                                 DispatchQueue.main.async {
-                                    print("成功获取站点位置：\(stationLocation)")
+                                    print("\(bus.lineName): 成功获取站点位置：\(stationLocation)")
                                     self.longitude = stationLocation.longitude
                                     self.latitude = stationLocation.latitude
-                                    self.mapDesc = stationLocation.desc
+                                    let timeBus = stationLocation.timeBusDTOList
+                                    if !timeBus.isEmpty {
+                                        let firstTimeBus = timeBus[0]
+                                        self.mapDesc = "预计\(firstTimeBus.arriveTime)分钟到达\(stationLocation.arriveStationName)"
+                                        
+                                        var busTimeInfo = ""
+                                        for index in 0..<timeBus.count {
+                                            busTimeInfo += "第\(index+1)辆车还有\(timeBus[index].stationDistance)站;"
+                                            if index == 1{
+                                                break
+                                            }
+                                        }
+                                        // 只显示两辆车
+                                        self.busReatimeInfo = busTimeInfo
+                                    }
+                                    
                                 }
                             }
                         } else {
@@ -166,7 +154,7 @@ struct BusRowView: View {
                     }
                 }
                 .onAppear {
-                    viewModel.fetchBusTime(bus: bus)
+                    viewModel.getTimeStaionLocation(bus: bus)
                     viewModel.getDirec(busId: bus.id)
                 }
 

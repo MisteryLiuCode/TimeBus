@@ -9,13 +9,13 @@ import Alamofire
 import SwiftUI
 
 class ViewModel: ObservableObject {
-    @Published var busTimeInfo: String = "加载中..."
-    @Published var arriveTime: Int = -1
+    @Published var busTimeInfo: String = "没有车"
+    @Published var arriveTime: Int = 0
     
     // 实时更新灵动岛信息
     func updateActivityTime(){
         if let detailViewData = UserDefaultsManager.shared.getDetailViewData(){
-            fetchBusTime(lineName: detailViewData.busDetail.lineName, stationId: detailViewData.stationId, lineId: converToLineId(lineId: detailViewData.busDetail.id))
+            getTimeStaionLocation(lineName: detailViewData.busDetail.lineName, stationId: detailViewData.stationId, lineId: converToLineId(lineId: detailViewData.busDetail.id))
         }
     }
 
@@ -25,12 +25,23 @@ class ViewModel: ObservableObject {
         let stationId: Int
         let lineId: String
     }
-    // 调用实时公交接口
-    struct RealTimeInfo: Decodable {
-        let detailDesc: String
+    
+    
+    struct StationLocation: Decodable {
+        let longitude: Double
+        let latitude: Double
+        let arriveStationName: String
+        let timeBusDTOList: [TimeBusDTO]
+    }
+    
+    struct TimeBusDTO: Decodable{
+        let level: Int
+        let stationDistance: Int
         let arriveTime: Int
     }
-    func fetchBusTime(lineName: String, stationId: Int, lineId: String) {
+
+    // 获取关注的位置和时间描述
+    func getTimeStaionLocation(lineName: String, stationId: Int, lineId: String) {
         print("开始调用实时公交接口")
         let params = RequestParams(lineName: lineName, stationId: stationId, lineId: lineId)
         AF.request("http://47.99.71.232:8083/timeBus/busRealtime", method: .post, parameters: params, encoder: JSONParameterEncoder.default).responseData { response in
@@ -39,26 +50,34 @@ class ViewModel: ObservableObject {
                 do {
                     let responseData = try JSONDecoder().decode(ResponseData.self, from: data)
                     if responseData.code == 200 {
-                        if let dataFromString = responseData.data.data(using: .utf8) {
-                            let realTimeInfo = try JSONDecoder().decode(RealTimeInfo.self, from: dataFromString)
-                            DispatchQueue.main.async {
-                                print("调用实时公交接口结果：\(realTimeInfo)")
-                                self.busTimeInfo = realTimeInfo.detailDesc
-                                self.arriveTime = realTimeInfo.arriveTime
+                            if let dataFromString = responseData.data.data(using: .utf8) {
+                                let stationLocation = try JSONDecoder().decode(StationLocation.self, from: dataFromString)
+                                DispatchQueue.main.async {
+                                    print("\(lineName): 详情成功获取站点位置：\(stationLocation)")
+                                    let timeBus = stationLocation.timeBusDTOList
+                                    if !timeBus.isEmpty {
+                                        let firstTimeBus = timeBus[0]
+                                        self.arriveTime = firstTimeBus.arriveTime
+                                        var busTimeInfo = ""
+                                        for index in 0..<timeBus.count {
+                                            busTimeInfo += "第\(index+1)辆车还有\(timeBus[index].stationDistance)站;"
+                                        }
+                                        self.busTimeInfo = busTimeInfo
+                                    }
+                                    
+                                }
                             }
+                        } else {
+                            print("调用实时公交接口获取信息失败: \(responseData.message)")
                         }
-                    } else {
-                        print("调用实时公交接口获取信息失败: \(responseData.message)")
+                    } catch {
+                        print("调用实时公交接口解析信息失败: \(error)")
                     }
-                } catch {
-                    print("调用实时公交接口解析信息失败: \(error)")
+                case .failure(let error):
+                    print("调用实时公交接口请求失败: \(error)")
+                    self.busTimeInfo = "请求信息失败"
                 }
-            case .failure(let error):
-                print("调用实时公交接口请求失败: \(error)")
-                self.busTimeInfo = "请求信息失败"
-            }
         }
-        
     }
 }
 
@@ -129,7 +148,7 @@ struct BusDetailView: View {
                                       isSelected: station.id == selectedStationId,
                                       tapAction: {
                                         selectedStationId = station.id  // Set the station as selected
-                                        viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: station.id, lineId: station.lineId)
+                                        viewModel.getTimeStaionLocation(lineName: busDetail.lineName, stationId: station.id, lineId: station.lineId)
                                       })
                     }
                 }
@@ -170,12 +189,12 @@ struct BusDetailView: View {
             // Check and update the selectedStationId if the current bus is a favorite
             if let favoriteStationId = UserDefaultsManager.shared.getFavoriteStationId(for: busDetail.id)?.stationId {
                 selectedStationId = favoriteStationId
-                viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: selectedStationId!, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
+                viewModel.getTimeStaionLocation(lineName: busDetail.lineName, stationId: selectedStationId!, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
             }
         }else{
             print("没有关注站点,默认选择最后一个")
             selectedStationId = busDetail.stations[busDetail.stations.count - 1].id
-            viewModel.fetchBusTime(lineName: busDetail.lineName, stationId: selectedStationId!, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
+            viewModel.getTimeStaionLocation(lineName: busDetail.lineName, stationId: selectedStationId!, lineId: busDetail.stations[busDetail.stations.count - 1].lineId)
         }
     }
     func saveFavorite(option: FavoriteOption) {
