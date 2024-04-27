@@ -18,7 +18,21 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     override init() {
         super.init()
         self.locationManager.delegate = self
+        checkAuthorizationStatus()
     }
+    
+    private func checkAuthorizationStatus() {
+           switch locationManager.authorizationStatus {
+           case .notDetermined:
+               locationManager.requestWhenInUseAuthorization()
+           case .restricted, .denied:
+               print("位置服务被禁用或限制")
+           case .authorizedWhenInUse, .authorizedAlways:
+               locationManager.requestLocation()
+           @unknown default:
+               fatalError("未处理的授权状态")
+           }
+       }
     
     func requestLocation() {
         locationManager.requestWhenInUseAuthorization() // 请求用户授权
@@ -47,4 +61,6 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             }
         }
     }
+    
+
 }

@@ -7,65 +7,79 @@
 
 import SwiftUI
 import Alamofire
+import Combine
 
 struct ContentView: View {
-    // 搜索
     @State private var searchText = ""
-    // 公交线路数组
     @State private var busLines = [BusDetail]()
-    // 访问位置,显示城市公交,比如北京
-    @StateObject private var locationManager = LocationManager() // 添加位置管理器的状态对象
-    // 根据是否是搜索结果显示不同的样式
+    @StateObject private var locationManager = LocationManager()
     @State private var showingSearchResults = false
+    private var searchSubject = PassthroughSubject<String, Never>()
+    private var cancellables: Set<AnyCancellable> = []
 
     var body: some View {
-            NavigationView {
-                ZStack {
-                    // 搜索结果显示的数据和样式
-                    if showingSearchResults {
-                        List(filteredBusLines) { busLine in
-                            searchResultsView(busLine: busLine)
-                        }
-                        // 获取当前位置的城市
-                        .navigationBarTitle("\(locationManager.city ?? "北京")公交搜索结果")
-                        .refreshable {
-                            refreshData()
-                        }
-                    } else {
-                        // 获取关注的公交线路
-                        List(busLines) { busLine in
-                            favoriteBusView(busLine: busLine)
-                        }
-                        .navigationBarTitle("\(locationManager.city ?? "北京")公交")
-                        .refreshable {
-                            refreshData()
-                        }
+        NavigationView {
+            ZStack {
+                if showingSearchResults {
+                    List(busLines, id: \.id) { busLine in
+                        searchResultsView(busLine: busLine)
                     }
-                }
-                .searchable(text: $searchText, prompt: "搜索公交线路")
-                .onChange(of: searchText) { newValue in
-                    showingSearchResults = !newValue.isEmpty
-                    if !newValue.isEmpty {
-                        fetchBusLines(searchText: newValue)
-                    }else {
-                        // 当搜索文本被清空，可能是用户点击了取消按钮
+                    .navigationBarTitle("\(locationManager.city ?? "北京")公交")
+                    .refreshable {
                         refreshData()
                     }
-                }
-                .onAppear {
-                    // 请求位置
-                    locationManager.requestLocation()
-                    if searchText.isEmpty {
-                        // 刷新关注公交
+                } else {
+                    List(busLines, id: \.id) { busLine in
+                        favoriteBusView(busLine: busLine)
+                    }
+                    .navigationBarTitle("\(locationManager.city ?? "北京")公交")
+                    .refreshable {
                         refreshData()
                     }
                 }
             }
+            .searchable(text: $searchText, prompt: "搜索公交线路")
+            .onChange(of: searchText) { newValue in
+                searchSubject.send(newValue)
+            }
+            .onAppear {
+                locationManager.requestLocation()
+                if searchText.isEmpty {
+                    refreshData()
+                }
+            }
         }
+        .onReceive(
+            searchSubject
+                .debounce(for: .seconds(0.5 ), scheduler: RunLoop.main)
+                .removeDuplicates()
+        ) { newValue in
+            showingSearchResults = !newValue.isEmpty
+            if !newValue.isEmpty {
+                if let location = locationManager.location {
+                    let searchParam = SearchBusParam(searchText: newValue, latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+                    fetchBusLines(searchBusParam: searchParam)
+                } else {
+                    print("获取位置信息失败")
+                }
+            } else {
+                refreshData()
+            }
+        }
+        .onDisappear {
+            cancellables.forEach { $0.cancel() }
+        }
+    }
+
 
     func refreshData() {
         if showingSearchResults {
-            fetchBusLines(searchText: searchText)
+            if let location = locationManager.location {
+                let search = SearchBusParam(searchText: searchText, latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+                fetchBusLines(searchBusParam: search)
+            }else{
+                print("获取位置信息失败")
+            }
         } else {
             refreshFavoriteBusLines()
         }
@@ -107,13 +121,13 @@ struct ContentView: View {
 
 
     // 根据搜索文本过滤线路
-    var filteredBusLines: [BusDetail] {
-            if searchText.isEmpty {
-                return []
-            } else {
-                return busLines.filter { $0.lineName.contains(searchText) || $0.description.contains(searchText) }
-            }
-        }
+//    var filteredBusLines: [BusDetail] {
+//            if searchText.isEmpty {
+//                return []
+//            } else {
+//                return busLines.filter { $0.lineName.contains(searchText) || $0.description.contains(searchText) }
+//            }
+//        }
 
     func refreshFavoriteBusLines() {
             // 假设`UserDefaultsManager.shared.getFavoriteBus()`
@@ -121,23 +135,29 @@ struct ContentView: View {
             busLines = UserDefaultsManager.shared.getFavoriteBus()
             print("最爱公交线路列表已刷新")
         }
+    
+    struct SearchBusParam :Codable{
+        let searchText: String
+        let latitude: Double?
+        let longitude: Double?
+    }
 
 
-    func fetchBusLines(searchText: String) {
-        do {
-            // 读取本地缓存,如果没有再调用接口获取
-            let busLines = try UserDefaultsManager.shared.getSearchData(searchText: searchText)
-            if !busLines.isEmpty {
-                print("使用本地搜索数据")
-                self.busLines = busLines
-                return
-            }
-        } catch {
-            // 如果错误被抛出，就会运行这里的代码
-            print("使用本地搜索数据异常: \(error)")
-        }
+    func fetchBusLines(searchBusParam: SearchBusParam) {
+//        do {
+//            // 读取本地缓存,如果没有再调用接口获取
+//            let busLines = try UserDefaultsManager.shared.getSearchData(searchText: searchText)
+//            if !busLines.isEmpty {
+//                print("使用本地搜索数据")
+//                self.busLines = busLines
+//                return
+//            }
+//        } catch {
+//            // 如果错误被抛出，就会运行这里的代码
+//            print("使用本地搜索数据异常: \(error)")
+//        }
         // 本地没有,读取接口数据
-        AF.request("\(busDataByLineNameUrl)\(searchText)", method: .get).responseData {response in
+        AF.request("\(busDataByLineNameUrl)", method: .post, parameters: searchBusParam, encoder: JSONParameterEncoder.default).responseData { response in
             switch response.result {
             case .success(let data):
                 do {
@@ -151,13 +171,14 @@ struct ContentView: View {
                                 do {
                                     let busLines = try decoder.decode([BusDetail].self, from: busLinesData)
                                     self.busLines = busLines
-                                    do {
-                                        print("开始把搜索数据保存到本地")
-                                        try UserDefaultsManager.shared.savaSearchData(searchText: searchText, data: busLines)
-                                    } catch {
-                                        // 如果错误被抛出，就会运行这里的代码
-                                        print("把搜索数据保存到本地失败: \(error)")
-                                    }
+                                    print("成功")
+//                                    do {
+//                                        print("开始把搜索数据保存到本地")
+//                                        try UserDefaultsManager.shared.savaSearchData(searchText: searchText, data: busLines)
+//                                    } catch {
+//                                        // 如果错误被抛出，就会运行这里的代码
+//                                        print("把搜索数据保存到本地失败: \(error)")
+//                                    }
                                 } catch {
                                     print("无法解析busLines: \(error)")
                                     self.busLines = []

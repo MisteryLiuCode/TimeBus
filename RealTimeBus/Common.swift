@@ -13,10 +13,10 @@ struct ResponseData: Codable {
     let message: String
 }
 
-//let host = "localhost"
+//let host = "192.168.0.108"
 let host = "47.99.71.232"
 
-let busDataByLineNameUrl = "http://\(host):8083/timeBus/tBusLine/getBusDataByLineName/"
+let busDataByLineNameUrl = "http://\(host):8083/timeBus/tBusLine/searchBusLine"
 
 func converToLineId(lineId: Int) -> String {
     // 使用格式化字符串来指定输出长度和前导零
