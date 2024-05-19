@@ -12,7 +12,8 @@ struct BusStationRow: View {
     let station: Station
     var isSelected: Bool // New parameter
     var tapAction: () -> Void
-
+    @State private var tap: Bool = false
+    
     var body: some View {
         HStack(spacing: 15) {
             Image(systemName: station.isCurrent ?? false ? "bus.fill" : "bus")
@@ -33,14 +34,19 @@ struct BusStationRow: View {
             }
             Spacer()
         }
-        .onTapGesture {
-            tapAction() // Call the closure when the row is tapped
-        }
         .padding()
-        // Update background or border here based on isSelected, if needed
         .background(isSelected ? Color.blue.opacity(0.2) : Color(.systemGray6))
         .cornerRadius(10)
         .shadow(color: .gray.opacity(0.5), radius: 2, x: 0, y: 2)
         .padding(.horizontal)
+        .scaleEffect(tap ? 0.95 : 1) // 简单的点击效果
+        .animation(.easeInOut, value: tap)
+        .onTapGesture {
+            self.tap = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.tap = false
+                tapAction()
+            }
+        }
     }
 }

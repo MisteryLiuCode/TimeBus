@@ -56,12 +56,9 @@ struct ContentView: View {
         ) { newValue in
             showingSearchResults = !newValue.isEmpty
             if !newValue.isEmpty {
-                if let location = locationManager.location {
-                    let searchParam = SearchBusParam(searchText: newValue, latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+                    let searchParam = SearchBusParam(searchText: newValue)
                     fetchBusLines(searchBusParam: searchParam)
-                } else {
-                    print("获取位置信息失败")
-                }
+               
             } else {
                 refreshData()
             }
@@ -74,12 +71,9 @@ struct ContentView: View {
 
     func refreshData() {
         if showingSearchResults {
-            if let location = locationManager.location {
-                let search = SearchBusParam(searchText: searchText, latitude: location.coordinate.latitude, longitude: location.coordinate.longitude)
+
+                let search = SearchBusParam(searchText: searchText)
                 fetchBusLines(searchBusParam: search)
-            }else{
-                print("获取位置信息失败")
-            }
         } else {
             refreshFavoriteBusLines()
         }
@@ -138,8 +132,10 @@ struct ContentView: View {
     
     struct SearchBusParam :Codable{
         let searchText: String
-        let latitude: Double?
-        let longitude: Double?
+    }
+    struct SearchResult: Decodable {
+        let searchText: String
+        let lineStationsList: [BusDetail]
     }
 
 
@@ -167,18 +163,22 @@ struct ContentView: View {
                     if responseData.code == 200 {
                         DispatchQueue.main.async {
                             // 使用data字段上的JSON字符串来解码BusDetail数组
-                            if let busLinesData = responseData.data.data(using: .utf8) {
+                            if let dataFromString = responseData.data.data(using: .utf8) {
                                 do {
-                                    let busLines = try decoder.decode([BusDetail].self, from: busLinesData)
-                                    self.busLines = busLines
-                                    print("成功")
-//                                    do {
-//                                        print("开始把搜索数据保存到本地")
-//                                        try UserDefaultsManager.shared.savaSearchData(searchText: searchText, data: busLines)
-//                                    } catch {
-//                                        // 如果错误被抛出，就会运行这里的代码
-//                                        print("把搜索数据保存到本地失败: \(error)")
-//                                    }
+                                    let searchResult = try JSONDecoder().decode(SearchResult.self, from: dataFromString)
+                                    if self.searchText == searchResult.searchText{
+                                        self.busLines = searchResult.lineStationsList
+                                        print("成功搜索结果,搜索的关键词:\(searchResult.searchText)")
+    //                                    do {
+    //                                        print("开始把搜索数据保存到本地")
+    //                                        try UserDefaultsManager.shared.savaSearchData(searchText: searchText, data: busLines)
+    //                                    } catch {
+    //                                        // 如果错误被抛出，就会运行这里的代码
+    //                                        print("把搜索数据保存到本地失败: \(error)")
+    //                                    }
+                                    }
+
+
                                 } catch {
                                     print("无法解析busLines: \(error)")
                                     self.busLines = []
