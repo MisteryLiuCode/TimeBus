@@ -18,6 +18,7 @@
 		4C49DB292BD38EC400A13511 /* RealTimeBusWeight.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DB242BD38EC400A13511 /* RealTimeBusWeight.intentdefinition */; };
 		4C49DB2C2BD38EC400A13511 /* RealTimeBusWeightExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4C49DB182BD38EC300A13511 /* RealTimeBusWeightExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4C49DB312BD38FF300A13511 /* RealTimeBusWeightAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C49DB202BD38EC400A13511 /* RealTimeBusWeightAttributes.swift */; };
+		4C5C1C242BF9BDC80063E3D6 /* HighlightedTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C5C1C232BF9BDC80063E3D6 /* HighlightedTextView.swift */; };
 		4C8031132BB9062C009ECCA9 /* RealTimeBusApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031122BB9062C009ECCA9 /* RealTimeBusApp.swift */; };
 		4C8031152BB9062C009ECCA9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8031142BB9062C009ECCA9 /* ContentView.swift */; };
 		4C8031172BB9062C009ECCA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4C8031162BB9062C009ECCA9 /* Assets.xcassets */; };
@@ -70,6 +71,7 @@
 		4C49DB242BD38EC400A13511 /* RealTimeBusWeight.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = RealTimeBusWeight.intentdefinition; sourceTree = "<group>"; };
 		4C49DB252BD38EC400A13511 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4C49DB272BD38EC400A13511 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4C5C1C232BF9BDC80063E3D6 /* HighlightedTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightedTextView.swift; sourceTree = "<group>"; };
 		4C80310F2BB9062C009ECCA9 /* RealTimeBus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealTimeBus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C8031122BB9062C009ECCA9 /* RealTimeBusApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeBusApp.swift; sourceTree = "<group>"; };
 		4C8031142BB9062C009ECCA9 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 				4CD35CC72BCA7E560021AED3 /* BusRowView.swift */,
 				4CDAA13B2BD4FB8F007D720F /* LiveActivity.swift */,
 				4CDAA13D2BD5023A007D720F /* FavoriteOption.swift */,
+				4C5C1C232BF9BDC80063E3D6 /* HighlightedTextView.swift */,
 			);
 			path = RealTimeBus;
 			sourceTree = "<group>";
@@ -360,6 +363,7 @@
 				4C49DB292BD38EC400A13511 /* RealTimeBusWeight.intentdefinition in Sources */,
 				4C8031132BB9062C009ECCA9 /* RealTimeBusApp.swift in Sources */,
 				4C8031232BB91A96009ECCA9 /* BusDetailView.swift in Sources */,
+				4C5C1C242BF9BDC80063E3D6 /* HighlightedTextView.swift in Sources */,
 				4C8031252BB91C3B009ECCA9 /* BusDetail.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

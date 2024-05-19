@@ -99,19 +99,24 @@ struct ContentView: View {
         }
 
     func searchResultsView(busLine: BusDetail) -> some View {
-            NavigationLink(destination: BusDetailView(busDetail: busLine)) {
-                HStack {
-                    Image(systemName: "bus")
-                    VStack(alignment: .leading) {
-                        Text(busLine.lineName)
-                            .fontWeight(.bold)
-                        Text(busLine.description ?? "")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
+        NavigationLink(destination: BusDetailView(busDetail: busLine)) {
+            HStack {
+                Image(systemName: "bus")
+                VStack(alignment: .leading) {
+                    HighlightedTextView(text: busLine.lineName, searchText: searchText)
+                        .fontWeight(.bold)
+
+                    HStack {
+                        HighlightedTextView(text: busLine.firstStation, searchText: searchText)
+                        Text("-")
+                        HighlightedTextView(text: busLine.lastStation, searchText: searchText)
                     }
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
                 }
             }
         }
+    }
 
 
     // 根据搜索文本过滤线路

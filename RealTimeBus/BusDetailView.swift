@@ -60,7 +60,11 @@ class ViewModel: ObservableObject {
                                         self.arriveTime = firstTimeBus.arriveTime
                                         var busTimeInfo = ""
                                         for index in 0..<timeBus.count {
-                                            busTimeInfo += "第\(index+1)辆车还有\(timeBus[index].stationDistance)站;"
+                                            if timeBus[index].stationDistance == 0{
+                                                busTimeInfo += "第\(index+1)辆车即将到站;"
+                                            }else{
+                                                busTimeInfo += "第\(index+1)辆车还有\(timeBus[index].stationDistance)站;"
+                                            }
                                         }
                                         self.busTimeInfo = busTimeInfo
                                     }

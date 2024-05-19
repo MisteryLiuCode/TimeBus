@@ -46,6 +46,9 @@ struct BusStationRow: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.tap = false
                 tapAction()
+                // Trigger haptic feedback
+                let generator = UIImpactFeedbackGenerator(style: .medium)
+                generator.impactOccurred()
             }
         }
     }

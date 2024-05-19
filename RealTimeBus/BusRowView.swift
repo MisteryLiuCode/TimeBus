@@ -59,11 +59,19 @@ class BusViewModel: ObservableObject {
                                     let timeBus = stationLocation.timeBusDTOList
                                     if !timeBus.isEmpty {
                                         let firstTimeBus = timeBus[0]
-                                        self.mapDesc = "预计\(firstTimeBus.arriveTime)分钟到达\(stationLocation.arriveStationName)"
                                         
+                                        if firstTimeBus.stationDistance == 0{
+                                            self.mapDesc = "即将到达到达\(stationLocation.arriveStationName)"
+                                        }else {
+                                            self.mapDesc = "预计\(firstTimeBus.arriveTime)分钟到达\(stationLocation.arriveStationName)"
+                                        }
                                         var busTimeInfo = ""
                                         for index in 0..<timeBus.count {
-                                            busTimeInfo += "第\(index+1)辆车还有\(timeBus[index].stationDistance)站;"
+                                            if timeBus[index].stationDistance == 0{
+                                                busTimeInfo += "第\(index+1)辆车即将到站;"
+                                            }else{
+                                                busTimeInfo += "第\(index+1)辆车还有\(timeBus[index].stationDistance)站;"
+                                            }
                                             if index == 1{
                                                 break
                                             }
